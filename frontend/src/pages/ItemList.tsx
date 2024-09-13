@@ -53,7 +53,7 @@ const ItemList: React.FC = () => {
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Typography variant="h4" align="center" gutterBottom>
-        Inventory Items
+        מוצרי מלאי
       </Typography>
       
       {/* Conditionally render the Add New Item button */}
@@ -64,20 +64,20 @@ const ItemList: React.FC = () => {
           component={Link}
           to={`/branch/${branchId}/add`} // Navigate to the correct branch-specific add item page
           sx={{ mb: 2 }}
-        >
-          + Add New Item
+        > 
+          + הוסף מוצר חדש
         </Button>
       )}
 
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell><strong>Name</strong></TableCell>
-            <TableCell><strong>Description</strong></TableCell>
-            <TableCell><strong>Quantity</strong></TableCell>
-            <TableCell><strong>Price ($)</strong></TableCell>
-            <TableCell><strong>Date Added</strong></TableCell>
-            <TableCell align="center"><strong>Actions</strong></TableCell>
+            <TableCell><strong>שם</strong></TableCell>
+            <TableCell><strong>תיאור</strong></TableCell>
+            <TableCell><strong>כמות</strong></TableCell>
+            <TableCell><strong>מחיר ($)</strong></TableCell>
+            <TableCell><strong>תאריך הוספה</strong></TableCell>
+            <TableCell align="center"><strong>פעולות</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -98,7 +98,7 @@ const ItemList: React.FC = () => {
                   <>
                     <IconButton
                       component={Link}
-                      to={`/edit/${item._id}`}
+                      to={`/branch/${branchId}/edit/${item._id}`}
                       color="primary"
                     >
                       <Edit />

@@ -24,7 +24,7 @@ const EditItem: React.FC = () => {
   // Fetch the existing item data when the component mounts
   useEffect(() => {
     axios
-      .get<IItem>(`/api/items/${id}`)
+      .get<IItem>(`/api/branch/items/${id}`)
       .then((response) => {
         setItem(response.data);
       })
@@ -53,7 +53,7 @@ const EditItem: React.FC = () => {
     e.preventDefault();
     if (item) {
       axios
-        .patch<IItem>(`/api/items/${id}`, item)
+        .patch<IItem>(`/api/branch/items/${id}`, item)
         .then((response) => {
           console.log('Item updated:', response.data);
           navigate('/');
@@ -71,7 +71,7 @@ const EditItem: React.FC = () => {
       <Container maxWidth="sm">
         <Box sx={{ mt: 4 }}>
           <Typography variant="h6" align="center">
-            Loading...
+            ...אנא המתן, מוצר בטעינה
           </Typography>
         </Box>
       </Container>
@@ -82,7 +82,7 @@ const EditItem: React.FC = () => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 4 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          Edit Item
+          ערוך מוצר
         </Typography>
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -91,7 +91,7 @@ const EditItem: React.FC = () => {
         )}
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
-            label="Name"
+            label="שם המוצר"
             name="name"
             value={item.name}
             onChange={handleChange}
@@ -100,7 +100,7 @@ const EditItem: React.FC = () => {
             margin="normal"
           />
           <TextField
-            label="Description"
+            label="תיאור המוצר"
             name="description"
             value={item.description}
             onChange={handleChange}
@@ -110,7 +110,7 @@ const EditItem: React.FC = () => {
             margin="normal"
           />
           <TextField
-            label="Quantity"
+            label="כמות"
             name="quantity"
             value={item.quantity}
             onChange={handleChange}
@@ -121,7 +121,7 @@ const EditItem: React.FC = () => {
             inputProps={{ min: 1 }}
           />
           <TextField
-            label="Price"
+            label="מחיר"
             name="price"
             value={item.price}
             onChange={handleChange}
@@ -137,7 +137,7 @@ const EditItem: React.FC = () => {
             fullWidth
             sx={{ mt: 3 }}
           >
-            Update Item
+            עדכן מוצר
           </Button>
         </Box>
       </Box>

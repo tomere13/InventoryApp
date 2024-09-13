@@ -67,17 +67,17 @@ const AddItem: React.FC = () => {
 
     // Basic form validation
     if (!item.name.trim()) {
-      setError('Please provide a valid name.');
+      setError('אנא הכנס שם תקין');
       return;
     }
 
     if (item.quantity <= 0) {
-      setError('Quantity must be greater than zero.');
+      setError('הכמות צריכה להיות יותר גדולה מ0');
       return;
     }
 
     if (!item.branch) {
-      setError('Branch ID is missing. Cannot add item.');
+      setError('מזהה של הסניף חסר');
       return;
     }
 
@@ -102,14 +102,14 @@ const AddItem: React.FC = () => {
       <Container maxWidth="sm">
         <Box sx={{ mt: 4 }}>
           <Typography variant="h4" align="center" gutterBottom>
-            Add New Item
+            הכנס מוצר חדש
           </Typography>
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
           {/* Optionally, provide a button to navigate back or to select a branch */}
           <Button variant="contained" color="primary" onClick={() => navigate(-1)}>
-            Go Back
+            חזור
           </Button>
         </Box>
       </Container>
@@ -120,7 +120,7 @@ const AddItem: React.FC = () => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 4 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          Add New Item
+          הכנס מוצר חדש
         </Typography>
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -129,7 +129,7 @@ const AddItem: React.FC = () => {
         )}
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
-            label="Name"
+            label="שם המוצר"
             name="name"
             value={item.name}
             onChange={handleChange}
@@ -138,7 +138,7 @@ const AddItem: React.FC = () => {
             margin="normal"
           />
           <TextField
-            label="Description"
+            label="תיאור"
             name="description"
             value={item.description}
             onChange={handleChange}
@@ -148,7 +148,7 @@ const AddItem: React.FC = () => {
             margin="normal"
           />
           <TextField
-            label="Quantity"
+            label="כמות"
             name="quantity"
             value={item.quantity}
             onChange={handleChange}
@@ -159,7 +159,7 @@ const AddItem: React.FC = () => {
             inputProps={{ min: 1 }}
           />
           <TextField
-            label="Price"
+            label="מחיר"
             name="price"
             value={item.price}
             onChange={handleChange}
@@ -176,7 +176,7 @@ const AddItem: React.FC = () => {
             sx={{ mt: 3 }}
             disabled={loading}
           >
-            {loading ? <CircularProgress size={24} /> : 'Add Item'}
+            {loading ? <CircularProgress size={24} /> : 'הכנס מוצר חדש'}
           </Button>
         </Box>
       </Box>

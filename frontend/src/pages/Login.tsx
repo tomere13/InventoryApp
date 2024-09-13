@@ -51,7 +51,8 @@ const Login: React.FC = () => {
       });
       const { token, role } = response.data;
       login(token, role);
-      <NavigateToFirstBranch/>
+      navigate('/'); // Replace '/first-branch' with the correct route
+
     } catch (error: any) {
       console.error('Login error:', error);
       setError(error.response?.data?.message || 'Invalid username or password.');
@@ -95,7 +96,7 @@ const Login: React.FC = () => {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Login
+              התחבר
             </Typography>
             {error && (
               <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
@@ -108,7 +109,7 @@ const Login: React.FC = () => {
                 required
                 fullWidth
                 id="username"
-                label="Username"
+                label="שם משתמש"
                 name="username"
                 autoComplete="username"
                 autoFocus
@@ -121,7 +122,7 @@ const Login: React.FC = () => {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="סיסמא"
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -141,7 +142,7 @@ const Login: React.FC = () => {
                     backgroundColor: '#555555', // Slightly lighter dark on hover
                   }, }}
               >
-                {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'התחבר'}
               </Button>
               
             </Box>

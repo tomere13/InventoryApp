@@ -39,7 +39,7 @@ const BranchSelector: React.FC = () => {
 
   return (
     <FormControl variant="outlined" sx={{ minWidth: 200, mb: 2 }}>
-      <InputLabel id="branch-select-label">Select Branch</InputLabel>
+      <InputLabel id="branch-select-label">בחר סניף</InputLabel>
       <Select
         labelId="branch-select-label"
         value={branchId || ''}
