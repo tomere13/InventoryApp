@@ -1,17 +1,23 @@
 // src/pages/EditItem.tsx
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 import { IItem } from '../types';
 import { useNavigate, useParams } from 'react-router-dom';
 
+// Import MUI components
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Alert,
+} from '@mui/material';
+
 const EditItem: React.FC = () => {
-  const [item, setItem] = useState<IItem>({
-    name: '',
-    description: '',
-    quantity: 0,
-    price: 0,
-  });
+  const [item, setItem] = useState<IItem | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
@@ -22,65 +28,120 @@ const EditItem: React.FC = () => {
       .then((response) => {
         setItem(response.data);
       })
-      .catch((error) => console.error('Error fetching item:', error));
+      .catch((error) => {
+        console.error('Error fetching item:', error);
+        setError('Failed to fetch item data.');
+      });
   }, [id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setItem({ ...item, [e.target.name]: e.target.value });
+    if (item) {
+      const { name, value } = e.target;
+      setItem((prevItem) => ({
+        ...prevItem!,
+        [name]:
+          name === 'quantity' || name === 'price'
+            ? Number(value)
+            : value,
+      }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    axios
+    if (item) {
+      axios
         .patch<IItem>(`/api/items/${id}`, item)
         .then((response) => {
-        console.log('Item updated:', response.data);
-        navigate('/');
-      })
-      .catch((error) => console.error('Error updating item:', error));
+          console.log('Item updated:', response.data);
+          navigate('/');
+        })
+        .catch((error) => {
+          console.error('Error updating item:', error);
+          setError('Failed to update item. Please try again.');
+        });
+    }
   };
 
   // Show a loading message if the item data hasn't been fetched yet
-  if (!item.name && !item.description && item.quantity === 0 && item.price === 0) {
-    return <div>Loading...</div>;
+  if (!item) {
+    return (
+      <Container maxWidth="sm">
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6" align="center">
+            Loading...
+          </Typography>
+        </Box>
+      </Container>
+    );
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Edit Item</h2>
-      <label>Name:</label>
-      <input
-        type="text"
-        name="name"
-        value={item.name}
-        onChange={handleChange}
-        required
-      />
-      <label>Description:</label>
-      <textarea
-        name="description"
-        value={item.description}
-        onChange={handleChange}
-      />
-      <label>Quantity:</label>
-      <input
-        type="number"
-        name="quantity"
-        value={item.quantity}
-        onChange={handleChange}
-        required
-      />
-      <label>Price:</label>
-      <input
-        type="number"
-        name="price"
-        value={item.price}
-        onChange={handleChange}
-      />
-      <button type="submit">Update Item</button>
-    </form>
+    <Container maxWidth="sm">
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Edit Item
+        </Typography>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          <TextField
+            label="Name"
+            name="name"
+            value={item.name}
+            onChange={handleChange}
+            fullWidth
+            required
+            margin="normal"
+          />
+          <TextField
+            label="Description"
+            name="description"
+            value={item.description}
+            onChange={handleChange}
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
+          />
+          <TextField
+            label="Quantity"
+            name="quantity"
+            value={item.quantity}
+            onChange={handleChange}
+            type="number"
+            fullWidth
+            required
+            margin="normal"
+            inputProps={{ min: 1 }}
+          />
+          <TextField
+            label="Price"
+            name="price"
+            value={item.price}
+            onChange={handleChange}
+            type="number"
+            fullWidth
+            margin="normal"
+            inputProps={{ min: 0, step: 0.01 }}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 3 }}
+          >
+            Update Item
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 };
 

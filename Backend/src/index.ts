@@ -5,6 +5,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import itemRoutes from './routes/items';
+import authRoutes from './routes/auth';
 
 
 
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
 dotenv.config();
 

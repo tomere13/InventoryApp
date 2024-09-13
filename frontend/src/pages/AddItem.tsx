@@ -1,9 +1,19 @@
 // src/pages/AddItem.tsx
 
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosInstance';
 import { IItem } from '../types';
 import { useNavigate } from 'react-router-dom';
+
+// Import MUI components
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Alert,
+} from '@mui/material';
 
 const AddItem: React.FC = () => {
   const [item, setItem] = useState<IItem>({
@@ -13,45 +23,107 @@ const AddItem: React.FC = () => {
     price: 0,
   });
 
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setItem({ ...item, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setItem((prevItem) => ({
+      ...prevItem,
+      [name]:
+        name === 'quantity' || name === 'price'
+          ? Number(value)
+          : value,
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    console.log("Trying to add\n");
-    
     e.preventDefault();
+
+    // Basic form validation
+    if (!item.name || item.quantity <= 0) {
+      setError('Please provide a valid name and quantity.');
+      return;
+    }
+
     axios
       .post<IItem>('/api/items', item)
       .then((response) => {
         console.log(response.data);
         navigate('/');
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setError('Failed to add item. Please try again.');
+      });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Add New Item</h2>
-      <label>Name:</label>
-      <input type="text" name="name" onChange={handleChange} required />
-      <label>Description:</label>
-      <textarea name="description" onChange={handleChange} />
-      <label>Quantity:</label>
-      <input
-        type="number"
-        name="quantity"
-        onChange={handleChange}
-        required
-      />
-      <label>Price:</label>
-      <input type="number" name="price" onChange={handleChange} />
-      <button type="submit">Add Item</button>
-    </form>
+    <Container maxWidth="sm">
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Add New Item
+        </Typography>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          <TextField
+            label="Name"
+            name="name"
+            value={item.name}
+            onChange={handleChange}
+            fullWidth
+            required
+            margin="normal"
+          />
+          <TextField
+            label="Description"
+            name="description"
+            value={item.description}
+            onChange={handleChange}
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
+          />
+          <TextField
+            label="Quantity"
+            name="quantity"
+            value={item.quantity}
+            onChange={handleChange}
+            type="number"
+            fullWidth
+            required
+            margin="normal"
+            inputProps={{ min: 1 }}
+          />
+          <TextField
+            label="Price"
+            name="price"
+            value={item.price}
+            onChange={handleChange}
+            type="number"
+            fullWidth
+            margin="normal"
+            inputProps={{ min: 0, step: 0.01 }}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 3 }}
+          >
+            Add Item
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 };
 

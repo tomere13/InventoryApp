@@ -2,25 +2,42 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
 import Navbar from './components/Navbar';
-import ItemList from './pages/ItemList';
 import AddItem from './pages/AddItem';
 import EditItem from './pages/EditItem';
+import ItemList from './pages/ItemList';
+import Login from './pages/Login'; // New login page
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#dc004e',
+    },
+  },
+});
 
-const App: React.FC = () => {
+function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<ItemList />} />
-        <Route path="/add" element={<AddItem />} />
-        {/* Edit Item Route */}
-        <Route path="/edit/:id" element={<EditItem />} />
-
-        {/* Optional: 404 Not Found Route */}
-        <Route path="*" element={<div>404 Not Found</div>} />      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <AuthProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<ItemList />} />
+            <Route path="/add" element={<ProtectedRoute requiredRole="admin"><AddItem /></ProtectedRoute>} />
+            <Route path="/edit/:id" element={<ProtectedRoute requiredRole="admin"><EditItem /></ProtectedRoute>} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
-};
+}
 
 export default App;
