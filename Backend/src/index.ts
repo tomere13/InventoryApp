@@ -4,8 +4,9 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import itemRoutes from './routes/items';
 
-dotenv.config();
+
 
 const app: Application = express();
 
@@ -13,10 +14,10 @@ const app: Application = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes placeholder
-app.get('/', (req: Request, res: Response) => {
-  res.send('Inventory Management API with TypeScript');
-});
+// Routes
+app.use('/api/items', itemRoutes);
+dotenv.config();
+
 
 // Start the server after connecting to MongoDB
 const PORT = process.env.PORT || 8080;
