@@ -1,9 +1,9 @@
 // src/pages/AddItem.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from '../utils/axiosInstance';
 import { IItem } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // Import MUI components
 import {
@@ -13,23 +13,44 @@ import {
   Typography,
   Box,
   Alert,
+  CircularProgress,
 } from '@mui/material';
 
 const AddItem: React.FC = () => {
+  const navigate = useNavigate();
+  const { branchId } = useParams<{ branchId: string }>(); // Extract branchId from URL
+
+  // State to manage the new item
   const [item, setItem] = useState<IItem>({
     name: '',
     description: '',
     quantity: 0,
     price: 0,
+    branch: branchId || '', // Initialize with branchId if available
   });
 
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
 
+  // Ensure that branchId is present
+  useEffect(() => {
+    if (!branchId) {
+      setError('Branch ID is missing. Cannot add item.');
+    } else {
+      console.log('branchId:', branchId); // Log the branchId for debugging
+      setItem((prevItem) => ({
+        ...prevItem,
+        branch: branchId,
+      }));
+    }
+  }, [branchId]);
+
+  // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+
     setItem((prevItem) => ({
       ...prevItem,
       [name]:
@@ -39,26 +60,61 @@ const AddItem: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
     // Basic form validation
-    if (!item.name || item.quantity <= 0) {
-      setError('Please provide a valid name and quantity.');
+    if (!item.name.trim()) {
+      setError('Please provide a valid name.');
       return;
     }
 
-    axios
-      .post<IItem>('/api/items', item)
-      .then((response) => {
-        console.log(response.data);
-        navigate('/');
-      })
-      .catch((error) => {
-        console.error(error);
-        setError('Failed to add item. Please try again.');
-      });
+    if (item.quantity <= 0) {
+      setError('Quantity must be greater than zero.');
+      return;
+    }
+
+    if (!item.branch) {
+      setError('Branch ID is missing. Cannot add item.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Post the new item to the specific branch
+      const response = await axios.post<IItem>(`/api/${item.branch}/items`, item);
+      console.log('Item added:', response.data);
+      navigate(`/branch/${item.branch}/items`); // Redirect to the item's branch list
+    } catch (err: any) {
+      console.error('Error adding item:', err);
+      setError(err.response?.data?.message || 'Failed to add item. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // If there's an error with branchId, display an alert
+  if (error && !loading) {
+    return (
+      <Container maxWidth="sm">
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Add New Item
+          </Typography>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+          {/* Optionally, provide a button to navigate back or to select a branch */}
+          <Button variant="contained" color="primary" onClick={() => navigate(-1)}>
+            Go Back
+          </Button>
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="sm">
@@ -118,8 +174,9 @@ const AddItem: React.FC = () => {
             color="primary"
             fullWidth
             sx={{ mt: 3 }}
+            disabled={loading}
           >
-            Add Item
+            {loading ? <CircularProgress size={24} /> : 'Add Item'}
           </Button>
         </Box>
       </Box>
