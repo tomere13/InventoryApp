@@ -17,3 +17,11 @@ export interface IStockReport {
   itemId: string; // or ObjectId if preferred
   desiredQuantity: number; // New property
 }
+
+export interface IBranch {
+  _id?: string;
+  name: string;
+  address: string;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -13,6 +13,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import SendReport from './components/SendReport';
+import ReportList from './pages/ReportList';
+import ReportDetail from './pages/ReportDetail';
 const theme = createTheme({
   palette: {
     primary: {
@@ -33,6 +35,8 @@ function App() {
           <Routes>
             {/* Redirect root to the first branch or to create a branch if none exist */}
             <Route path="/" element={<HomePage />} />
+            <Route path="/reportspage" element={<ReportList />} />
+            <Route path="/reports/:reportId" element={<ReportDetail />} />
 
             {/* Layout route for branch-specific pages */}
             <Route path="/branch/:branchId/*" element={<Layout />}>

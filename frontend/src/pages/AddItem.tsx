@@ -1,9 +1,9 @@
 // src/pages/AddItem.tsx
 
-import React, { useState, useEffect } from 'react';
-import axios from '../utils/axiosInstance';
-import { IItem, INewItem } from '../types';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "../utils/axiosInstance";
+import { IItem, INewItem } from "../types";
+import { useNavigate, useParams } from "react-router-dom";
 
 // Import MUI components
 import {
@@ -14,7 +14,7 @@ import {
   Box,
   Alert,
   CircularProgress,
-} from '@mui/material';
+} from "@mui/material";
 
 const AddItem: React.FC = () => {
   const navigate = useNavigate();
@@ -22,11 +22,11 @@ const AddItem: React.FC = () => {
 
   // State to manage the new item
   const [item, setItem] = useState<INewItem>({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     quantity: 0,
     price: 0,
-    branch: branchId || '', // Initialize with branchId if available
+    branch: branchId || "", // Initialize with branchId if available
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -35,9 +35,9 @@ const AddItem: React.FC = () => {
   // Ensure that branchId is present
   useEffect(() => {
     if (!branchId) {
-      setError('Branch ID is missing. Cannot add item.');
+      setError("Branch ID is missing. Cannot add item.");
     } else {
-      console.log('branchId:', branchId); // Log the branchId for debugging
+      console.log("branchId:", branchId); // Log the branchId for debugging
       setItem((prevItem) => ({
         ...prevItem,
         branch: branchId,
@@ -53,10 +53,7 @@ const AddItem: React.FC = () => {
 
     setItem((prevItem) => ({
       ...prevItem,
-      [name]:
-        name === 'quantity' || name === 'price'
-          ? Number(value)
-          : value,
+      [name]: name === "quantity" || name === "price" ? Number(value) : value,
     }));
   };
 
@@ -67,17 +64,17 @@ const AddItem: React.FC = () => {
 
     // Basic form validation
     if (!item.name.trim()) {
-      setError('אנא הכנס שם תקין');
+      setError("אנא הכנס שם תקין");
       return;
     }
 
     if (item.quantity <= 0) {
-      setError('הכמות צריכה להיות יותר גדולה מ0');
+      setError("הכמות צריכה להיות יותר גדולה מ0");
       return;
     }
 
     if (!item.branch) {
-      setError('מזהה של הסניף חסר');
+      setError("מזהה של הסניף חסר");
       return;
     }
 
@@ -85,12 +82,17 @@ const AddItem: React.FC = () => {
 
     try {
       // Post the new item to the specific branch
-      const response = await axios.post<IItem>(`/api/${item.branch}/items`, item);
-      console.log('Item added:', response.data);
+      const response = await axios.post<IItem>(
+        `/api/${item.branch}/items`,
+        item
+      );
+      console.log("Item added:", response.data);
       navigate(`/branch/${item.branch}/items`); // Redirect to the item's branch list
     } catch (err: any) {
-      console.error('Error adding item:', err);
-      setError(err.response?.data?.message || 'Failed to add item. Please try again.');
+      console.error("Error adding item:", err);
+      setError(
+        err.response?.data?.message || "Failed to add item. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -108,7 +110,11 @@ const AddItem: React.FC = () => {
             {error}
           </Alert>
           {/* Optionally, provide a button to navigate back or to select a branch */}
-          <Button variant="contained" color="primary" onClick={() => navigate(-1)}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate(-1)}
+          >
             חזור
           </Button>
         </Box>
@@ -171,12 +177,18 @@ const AddItem: React.FC = () => {
           <Button
             type="submit"
             variant="contained"
-            color="primary"
             fullWidth
-            sx={{ mt: 3 }}
+            sx={{
+              mt: 3,
+              backgroundColor: "#333333", // Dark background color
+              color: "#ffffff", // White text color
+              "&:hover": {
+                backgroundColor: "#555555", // Slightly lighter dark on hover
+              },
+            }}
             disabled={loading}
           >
-            {loading ? <CircularProgress size={24} /> : 'הכנס מוצר חדש'}
+            {loading ? <CircularProgress size={24} /> : "הכנס מוצר חדש"}
           </Button>
         </Box>
       </Box>

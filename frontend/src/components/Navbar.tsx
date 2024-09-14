@@ -106,6 +106,25 @@ const Navbar: React.FC = () => {
               צור סניף
             </Button>
           )}
+          {role === "admin" && (
+            <Button
+              color="inherit"
+              component={Link}
+              to="/reportspage"
+              sx={{
+                textTransform: "none",
+                fontSize: { xs: "0.75rem", sm: "1rem" }, // Smaller font on extra-small screens
+                mr: { xs: 1, sm: 2 }, // Reduced margin on extra-small screens
+                flexShrink: 1, // Allow button to shrink if necessary
+                whiteSpace: "nowrap", // Prevent text from wrapping within the button
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
+              }}
+            >
+              דוחות
+            </Button>
+          )}
         
           <Button
             color="inherit"

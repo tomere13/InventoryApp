@@ -1,5 +1,11 @@
 // src/types.ts
-
+import mongoose, { Document, Schema } from 'mongoose';
+// Interface for each item in the stock report
+// Interface for each item in the stock report
+export interface IStockReportItem {
+  itemId: IItem; // Change from mongoose.Types.ObjectId to IItem
+  currentStock: number;
+}
 export interface IBranch {
   _id?: string;
   name: string;
@@ -34,3 +40,12 @@ export interface IStockReport {
   itemId: string;
   currentStock: number;
 }
+
+export interface IReport {
+  _id: string; // Ensure _id is a string
+  branchId: IBranch;
+  stockReport: IStockReportItem[];
+  notes?: string;
+  dateSent: string; // ISO string
+}
+

@@ -8,6 +8,7 @@ import itemRoutes from './routes/items';
 import authRoutes from './routes/auth';
 import branchRoutes from './routes/branchRoutes';
 import sendReport from './routes/sendReport';
+import reports from './routes/reports';
 
 
 
@@ -22,6 +23,8 @@ app.use(express.json());
 // Routes
 app.use('/api/branches', branchRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/reports', reports); // Mount reports router once
+
 app.use('/api/:branchId/items', itemRoutes);
 app.use('/api', sendReport);
 
