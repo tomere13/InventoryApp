@@ -133,9 +133,12 @@ const EditItem: React.FC = () => {
           <Button
             type="submit"
             variant="contained"
-            color="primary"
             fullWidth
-            sx={{ mt: 3 }}
+            sx={{ mt: 3,backgroundColor: "#333333", // Dark background color
+              color: "#ffffff", // White text color
+              "&:hover": {
+                backgroundColor: "#555555", // Slightly lighter dark on hover
+              }, }}
           >
             עדכן מוצר
           </Button>

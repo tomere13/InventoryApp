@@ -25,6 +25,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/" />;
   }
 
+
+
   return children;
 };
 

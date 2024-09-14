@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from '../utils/axiosInstance';
-import { IItem } from '../types';
+import { IItem, INewItem } from '../types';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // Import MUI components
@@ -21,7 +21,7 @@ const AddItem: React.FC = () => {
   const { branchId } = useParams<{ branchId: string }>(); // Extract branchId from URL
 
   // State to manage the new item
-  const [item, setItem] = useState<IItem>({
+  const [item, setItem] = useState<INewItem>({
     name: '',
     description: '',
     quantity: 0,

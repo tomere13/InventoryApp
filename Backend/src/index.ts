@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import itemRoutes from './routes/items';
 import authRoutes from './routes/auth';
 import branchRoutes from './routes/branchRoutes';
+import sendReport from './routes/sendReport';
 
 
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use('/api/branches', branchRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/:branchId/items', itemRoutes);
+app.use('/api', sendReport);
 
 dotenv.config();
 

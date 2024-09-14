@@ -79,7 +79,7 @@ const CreateBranch: React.FC = () => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 4 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          Create New Branch
+          צור סניף חדש
         </Typography>
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -88,12 +88,12 @@ const CreateBranch: React.FC = () => {
         )}
         {success && (
           <Alert severity="success" sx={{ mb: 2 }}>
-            Branch created successfully!
+            סניף נוצר בהצלחה!
           </Alert>
         )}
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
-            label="Branch Name"
+            label="שם הסניף"
             name="name"
             value={branch.name}
             onChange={handleChange}
@@ -102,7 +102,7 @@ const CreateBranch: React.FC = () => {
             margin="normal"
           />
           <TextField
-            label="Address"
+            label="כתובת"
             name="address"
             value={branch.address}
             onChange={handleChange}
@@ -115,12 +115,15 @@ const CreateBranch: React.FC = () => {
           <Button
             type="submit"
             variant="contained"
-            color="primary"
             fullWidth
-            sx={{ mt: 3 }}
+            sx={{ mt: 3,backgroundColor: "#333333", // Dark background color
+              color: "#ffffff", // White text color
+              "&:hover": {
+                backgroundColor: "#555555", // Slightly lighter dark on hover
+              } }}
             disabled={loading}
           >
-            {loading ? "Creating..." : "Create Branch"}
+            {loading ? "יוצר.." : "צור סניף"}
           </Button>
         </Box>
       </Box>

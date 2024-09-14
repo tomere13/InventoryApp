@@ -11,9 +11,8 @@ import CreateBranch from './pages/CreateBranch';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
-import NavigateToFirstBranch from './components/NavigateToFirstBranch';
 import HomePage from './pages/HomePage';
-
+import SendReport from './components/SendReport';
 const theme = createTheme({
   palette: {
     primary: {
@@ -38,7 +37,14 @@ function App() {
             {/* Layout route for branch-specific pages */}
             <Route path="/branch/:branchId/*" element={<Layout />}>
               <Route path="items" element={<ItemList />} />
-              
+              <Route
+            path="sendreport"
+            element={
+              <ProtectedRoute requiredRole="employee">
+                <SendReport />
+              </ProtectedRoute>
+            }
+          />
               {/* Use 'add' without ':id' for adding new items */}
               <Route
                 path="add"

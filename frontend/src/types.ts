@@ -9,6 +9,16 @@ export interface IBranch {
 }
 
 export interface IItem {
+  _id: string;
+  name: string;
+  description?: string;
+  quantity: number;
+  price?: number;
+  dateAdded?: string;
+  branch: string; // Branch ID
+}
+
+export interface INewItem {
   _id?: string;
   name: string;
   description?: string;
@@ -16,4 +26,11 @@ export interface IItem {
   price?: number;
   dateAdded?: string;
   branch: string; // Branch ID
+}
+
+// src/types.ts
+
+export interface IStockReport {
+  itemId: string;
+  currentStock: number;
 }

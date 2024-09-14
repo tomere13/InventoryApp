@@ -85,39 +85,17 @@ const HomePage: React.FC = () => {
                         mr: 2,
                         mb: { xs: 2, sm: 0 },
                         transition: "transform 0.3s",
-                        "&:hover": {
-                          transform: "scale(1.05)",
-                          backgroundColor: "#333333", // Dark background color
+                        backgroundColor: "#333333", // Dark background color
                           color: "#ffffff", // White text color
                           "&:hover": {
                             backgroundColor: "#555555", // Slightly lighter dark on hover
                           },
-                        },
                       }}
                     >
                       התחבר
                     </Button>
                   )}
-                  {role === "admin" && (
-                    <Button
-                      variant="outlined"
-                      component={RouterLink}
-                      to="/create-branch"
-                      sx={{
-                        transition: "transform 0.3s",
-                        "&:hover": {
-                          transform: "scale(1.05)",
-                          backgroundColor: "#333333", // Dark background color
-                          color: "#ffffff", // White text color
-                          "&:hover": {
-                            backgroundColor: "#555555", // Slightly lighter dark on hover
-                          },
-                        },
-                      }}
-                    >
-                      Manage Branches
-                    </Button>
-                  )}
+                 
                 </Box>
               </CardContent>
             </Grid>

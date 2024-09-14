@@ -9,7 +9,6 @@ const router = express.Router();
 
 // Protect all branch routes
 router.use(authenticate);
-router.use(authorize('admin')); // Only admins can access these routes
 router.use('/:branchId/items', itemRoutes); // Make sure this is correct
 
 // Create a new branch

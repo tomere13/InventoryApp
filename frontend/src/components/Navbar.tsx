@@ -61,55 +61,68 @@ const Navbar: React.FC = () => {
 
         {/* Navigation Buttons */}
         {token ? (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "nowrap", // Prevent buttons from wrapping to the next line
+            overflow: "hidden", // Hide any overflowing content
+          }}
+        >
+          <Button
+            color="inherit"
+            component={Link}
+            to="/"
+            sx={{
+              textTransform: "none",
+              fontSize: { xs: "0.75rem", sm: "1rem" }, // Smaller font on extra-small screens
+              mr: { xs: 1, sm: 2 }, // Reduced margin on extra-small screens
+              flexShrink: 1, // Allow button to shrink if necessary
+              whiteSpace: "nowrap", // Prevent text from wrapping within the button
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
+            }}
+          >
+            דף בית
+          </Button>
+        
+          {role === "admin" && (
             <Button
               color="inherit"
               component={Link}
-              to="/"
+              to="/create-branch"
               sx={{
                 textTransform: "none",
-                fontSize: "1rem",
-                mr: 2,
+                fontSize: { xs: "0.75rem", sm: "1rem" }, // Smaller font on extra-small screens
+                mr: { xs: 1, sm: 2 }, // Reduced margin on extra-small screens
+                flexShrink: 1, // Allow button to shrink if necessary
+                whiteSpace: "nowrap", // Prevent text from wrapping within the button
                 "&:hover": {
                   backgroundColor: "rgba(0, 0, 0, 0.04)",
                 },
               }}
             >
-              דף בית
+              צור סניף
             </Button>
-
-            {role === "admin" && (
-              <Button
-                color="inherit"
-                component={Link}
-                to="/create-branch"
-                sx={{
-                  textTransform: "none",
-                  fontSize: "1rem",
-                  mr: 2,
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.04)",
-                  },
-                }}
-              >
-                צור סניף חדש
-              </Button>
-            )}
-
-            <Button
-              color="inherit"
-              onClick={handleLogout}
-              sx={{
-                textTransform: "none",
-                fontSize: "1rem",
-                "&:hover": {
-                  backgroundColor: "rgba(0, 0, 0, 0.04)",
-                },
-              }}
-            >
-              התנתק
-            </Button>
-          </Box>
+          )}
+        
+          <Button
+            color="inherit"
+            onClick={handleLogout}
+            sx={{
+              textTransform: "none",
+              fontSize: { xs: "0.75rem", sm: "1rem" }, // Smaller font on extra-small screens
+              flexShrink: 1, // Allow button to shrink if necessary
+              whiteSpace: "nowrap", // Prevent text from wrapping within the button
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
+            }}
+          >
+            התנתק
+          </Button>
+        </Box>
         ) : (
           <Button
             color="inherit"
