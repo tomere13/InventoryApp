@@ -1,8 +1,8 @@
 // src/pages/ReportList.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from '../utils/axiosInstance';
-import { IReport } from '../types';
+import { IReport, IBranch } from '../types';
 import {
   Container,
   Typography,
@@ -18,27 +18,50 @@ import {
   Alert,
   IconButton,
   Tooltip,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+  Button,
 } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 const ReportList: React.FC = () => {
   const [reports, setReports] = useState<IReport[]>([]);
+  const [branches, setBranches] = useState<IBranch[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // States for search and filters
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedBranch, setSelectedBranch] = useState<string>(''); // For branch filter
+  const [startDate, setStartDate] = useState<string>(''); // Using string to simplify
+  const [endDate, setEndDate] = useState<string>('');
+
   useEffect(() => {
-    axios
-      .get('/api/reports') // Removed '/api' prefix
-      .then((response) => {
-        setReports(response.data.reports);
+    const fetchData = async () => {
+      try {
+        const [reportsResponse, branchesResponse] = await Promise.all([
+          axios.get('/api/reports'),
+          axios.get('/api/branches'),
+        ]);
+        console.log('Reports API Response:', reportsResponse.data);
+        console.log('Branches API Response:', branchesResponse.data);
+        
+        setReports(reportsResponse.data.reports || []);
+        setBranches(branchesResponse.data.branches || []);
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching reports:', err);
-        setError('Failed to load reports.');
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load data.');
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Debugging: Log the reports to verify the structure
@@ -46,11 +69,98 @@ const ReportList: React.FC = () => {
     console.log('Fetched Reports:', reports);
   }, [reports]);
 
+  // Filtered reports based on search and filter criteria
+  const filteredReports = useMemo(() => {
+    return reports.filter((report) => {
+      // Filter by selected branch
+      const branchMatch = selectedBranch
+        ? report.branchId?.name === selectedBranch
+        : true;
+
+      // Filter by search query (searching in branch name and notes)
+      const searchMatch =
+        report.branchId?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (report.notes && report.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      // Filter by date range
+      const reportDate = new Date(report.dateSent);
+      const startDateMatch = startDate ? reportDate >= new Date(startDate) : true;
+      const endDateMatch = endDate ? reportDate <= new Date(endDate) : true;
+
+      return branchMatch && searchMatch && startDateMatch && endDateMatch;
+    });
+  }, [reports, searchQuery, selectedBranch, startDate, endDate]);
+
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" align="center" gutterBottom>
         דוחות מלאי
       </Typography>
+
+      <Box sx={{ mb: 3 }}>
+        <Grid container spacing={2} alignItems="center">
+          {/* Search Input */}
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              label="חיפוש"
+              variant="outlined"
+              fullWidth
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="חפש לפי שם סניף או הערות"
+            />
+          </Grid>
+
+          
+
+          {/* Start Date Input */}
+          <Grid item xs={12} sm={6} md={2}>
+            <TextField
+              label="מתאריך"
+              type="date"
+              variant="outlined"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </Grid>
+
+          {/* End Date Input */}
+          <Grid item xs={12} sm={6} md={2}>
+            <TextField
+              label="עד תאריך"
+              type="date"
+              variant="outlined"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </Grid>
+
+          {/* Reset Filters Button */}
+          <Grid item xs={12} sm={6} md={2}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedBranch('');
+                setStartDate('');
+                setEndDate('');
+              }}
+            >
+              איפוס מסננים
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
 
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -58,7 +168,7 @@ const ReportList: React.FC = () => {
         </Box>
       ) : error ? (
         <Alert severity="error">{error}</Alert>
-      ) : reports.length === 0 ? (
+      ) : filteredReports.length === 0 ? (
         <Alert severity="info">אין דוחות זמינים להצגה.</Alert>
       ) : (
         <TableContainer component={Paper}>
@@ -72,7 +182,7 @@ const ReportList: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-            {reports.map((report) => (
+              {filteredReports.map((report) => (
                 <TableRow key={report._id} hover>
                   <TableCell>{report.branchId?.name || 'N/A'}</TableCell>
                   <TableCell>
