@@ -97,7 +97,7 @@ const SendReport: React.FC = () => {
 
       setSuccess("דוח נשלח בהצלחה. נשלח אימייל עם פרטי ההזמנה.");
       // Optionally, navigate to another page
-      // navigate(`/branch/${branchId}/items`);
+       navigate(`/branch/${branchId}/items`);
     } catch (err: any) {
       console.error(err);
       const errorMessage = "אירעה שגיאה בשליחת הדוח. אנא נסה שוב.";
