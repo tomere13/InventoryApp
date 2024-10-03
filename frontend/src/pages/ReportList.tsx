@@ -178,7 +178,7 @@ const ReportList: React.FC = () => {
             <TableBody>
               {filteredReports.map((report) => (
                 <TableRow key={report._id} hover>
-                  <TableCell>{report.branchId?.name || 'N/A'}</TableCell>
+                  <TableCell>{report.branchId ? report.branchId.name : 'N/A'}</TableCell>
                   <TableCell>
                     {new Date(report.dateSent).toLocaleDateString('he-IL', {
                       year: 'numeric',
