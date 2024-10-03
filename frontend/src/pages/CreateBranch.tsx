@@ -69,7 +69,7 @@ const CreateBranch: React.FC = () => {
       navigate(`/branch/${newBranch._id}/items`); // Redirect to the new branch's item list
     } catch (err: any) {
       console.error(err);
-      setError(err.response?.data?.message || "Failed to create branch. Please try again.");
+      setError(err.response ? err.response.data.message : "Failed to create branch. Please try again.");
     } finally {
       setLoading(false);
     }
