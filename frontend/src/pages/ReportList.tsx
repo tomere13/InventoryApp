@@ -73,8 +73,8 @@ const ReportList: React.FC = () => {
 
       // Filter by search query (searching in branch name and notes)
       const searchMatch =
-        report.branchId?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (report.notes && report.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+      (report.branchId && report.branchId.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (report.notes && report.notes.toLowerCase().includes(searchQuery.toLowerCase()));
 
       // Filter by date range
       const reportDate = new Date(report.dateSent);
