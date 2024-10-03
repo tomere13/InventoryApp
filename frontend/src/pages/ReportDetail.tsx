@@ -111,7 +111,7 @@ const ReportDetail: React.FC = () => {
 
       <Box sx={{ mb: 2 }}>
         <Typography variant="subtitle1" sx={{ textAlign: "right" }}>
-          <strong>סניף:</strong> {report.branchId?.name || "N/A"}
+        <strong>סניף:</strong> {report.branchId ? report.branchId.name : "N/A"}
         </Typography>
         <Typography variant="subtitle1" sx={{ textAlign: "right" }}>
           <strong>תאריך נשלח:</strong>{" "}
