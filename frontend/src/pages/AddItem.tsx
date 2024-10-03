@@ -88,8 +88,8 @@ const AddItem: React.FC = () => {
       navigate(`/branch/${item.branch}/items`); 
     } catch (err: any) {
       console.error("Error adding item:", err);
-      setError(
-        err.response?.data?.message || "Failed to add item. Please try again."
+      setError(err.response ? 
+        err.response.data.message : "Failed to add item. Please try again."
       );
     } finally {
       setLoading(false);
