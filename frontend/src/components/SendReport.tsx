@@ -1,7 +1,7 @@
 // src/components/SendReport.tsx
 
 import React, { useState, useEffect, useContext, ChangeEvent } from "react";
-import axios from "../utils/axiosInstance"; 
+import axios from "../utils/axiosInstance";
 import { IItem, IStockReport } from "../types";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
@@ -100,10 +100,9 @@ const SendReport: React.FC = () => {
       // navigate(`/branch/${branchId}/items`);
     } catch (err: any) {
       console.error(err);
-      setError(
-        err.response?.data?.message ||
-          "אירעה שגיאה בשליחת הדוח. אנא נסה שוב."
-      );
+      const errorMessage =
+        err.response?.data?.message || "אירעה שגיאה בשליחת הדוח. אנא נסה שוב.";
+      setError(errorMessage);
     } finally {
       setSubmitting(false);
     }
@@ -204,14 +203,17 @@ const SendReport: React.FC = () => {
         <Button
           variant="contained"
           onClick={handleSubmit}
-          sx={{ mt: 3,backgroundColor: "#333333", // Dark background color
+          sx={{
+            mt: 3,
+            backgroundColor: "#333333", // Dark background color
             color: "#ffffff", // White text color
             "&:hover": {
               backgroundColor: "#555555", // Slightly lighter dark on hover
-            }  }}
+            },
+          }}
           disabled={submitting || !isFormValid()}
         >
-          {submitting ? <CircularProgress size={24} /> : "שלח דו\"ח"}
+          {submitting ? <CircularProgress size={24} /> : 'שלח דו"ח'}
         </Button>
       </Card>
 
@@ -221,7 +223,11 @@ const SendReport: React.FC = () => {
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
       >
-        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: "100%" }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
           {error}
         </Alert>
       </Snackbar>
@@ -232,7 +238,11 @@ const SendReport: React.FC = () => {
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: "100%" }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
           {success}
         </Alert>
       </Snackbar>
