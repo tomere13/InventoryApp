@@ -68,8 +68,8 @@ const ReportList: React.FC = () => {
     return reports.filter((report) => {
       // Filter by selected branch
       const branchMatch = selectedBranch
-        ? report.branchId?.name === selectedBranch
-        : true;
+      ? report.branchId && report.branchId.name === selectedBranch
+      : true;
 
       // Filter by search query (searching in branch name and notes)
       const searchMatch =
