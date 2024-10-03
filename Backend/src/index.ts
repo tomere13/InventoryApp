@@ -18,7 +18,12 @@ const app: Application = express();
 dotenv.config();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*', // Replace FRONTEND_URL with your frontend domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Set to true if you need to send cookies
+}));
 app.use(express.json());
 
 // Routes
