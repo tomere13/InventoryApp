@@ -1,6 +1,21 @@
-.env
-node_modules
+# Ignore environment files
+backend/.env
+frontend/.env
 
+
+# Ignore node_modules folders
+backend/node_modules/
+frontend/node_modules/
+
+# Ignore environment files
+Backend/.env
+Frontend/.env
+
+
+# Ignore node_modules folders
+Backend/node_modules/
+Frontend/node_modules/
+
+# Other common ignore patterns
 /coverage
-
 /build
