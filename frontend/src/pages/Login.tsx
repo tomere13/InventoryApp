@@ -49,7 +49,7 @@ const Login: React.FC = () => {
 
     } catch (error: any) {
       console.error('Login error:', error);
-      setError(error.response?.data?.message || 'Invalid username or password.');
+      setError(error.reaponse ? error.response.data.message : 'Invalid username or password.');
     } finally {
       setLoading(false);
     }
