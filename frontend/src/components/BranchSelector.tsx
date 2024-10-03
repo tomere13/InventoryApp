@@ -1,7 +1,7 @@
 // src/components/BranchSelector.tsx
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Select, MenuItem, FormControl, InputLabel, CircularProgress, Alert, SelectChangeEvent } from "@mui/material";
 import { IBranch } from "../types";
 import { getBranches } from '../services/branchService';
@@ -11,6 +11,7 @@ const BranchSelector: React.FC = () => {
   const [branches, setBranches] = useState<IBranch[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate(); // Use React Router to navigate
 
   useEffect(() => {
     const fetchBranches = async () => {
@@ -30,7 +31,7 @@ const BranchSelector: React.FC = () => {
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     const newBranchId = event.target.value;
-    window.location.href = `${process.env.REACT_APP_API_URL}/branch/${newBranchId}/items`;
+    navigate(`/branch/${newBranchId}/items`); // Use navigate instead of window.location.href
   };
 
   if (loading) return <CircularProgress />;
