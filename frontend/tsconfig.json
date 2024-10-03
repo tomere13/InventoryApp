@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "preserve",  // Ensure JSX is preserved for Babel
     "target": "ES6",
     "lib": [
       "dom",
@@ -23,7 +24,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
   },
   "include": [
     "src"
