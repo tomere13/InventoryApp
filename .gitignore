@@ -1,6 +1,6 @@
 .env
-/Frontend/node-modules/
-/Backend/node-modules/
+/Frontend/node_modules/
+/Backend/node_modules/
 
 /coverage
 
