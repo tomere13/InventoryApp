@@ -40,8 +40,8 @@ const ReportList: React.FC = () => {
     const fetchData = async () => {
       try {
         const [reportsResponse, branchesResponse] = await Promise.all([
-          axios.get('/api/reports'),
-          axios.get('/api/branches'),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/reports`),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/branches`),
         ]);
         console.log('Reports API Response:', reportsResponse.data);
         console.log('Branches API Response:', branchesResponse.data);

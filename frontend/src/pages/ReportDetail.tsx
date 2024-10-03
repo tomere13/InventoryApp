@@ -29,7 +29,7 @@ const ReportDetail: React.FC = () => {
     }
 
     axios
-      .get<{ report: IReport }>(`/api/reports/${reportId}`)
+      .get<{ report: IReport }>(`${process.env.REACT_APP_API_URL}/api/reports/${reportId}`)
       .then((response) => {
         console.log("Fetched Report Detail:", response.data.report);
         setReport(response.data.report);

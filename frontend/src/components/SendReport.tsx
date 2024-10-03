@@ -43,7 +43,7 @@ const SendReport: React.FC = () => {
 
     setLoading(true);
     axios
-      .get<IItem[]>(`/api/${branchId}/items`)
+      .get<IItem[]>(`${process.env.REACT_APP_API_URL}/api/${branchId}/items`)
       .then((response) => {
         const filteredItems = response.data.filter(
           (item) => item.branch === branchId
@@ -90,7 +90,7 @@ const SendReport: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `/api/${branchId}/sendreport`,
+        `${process.env.REACT_APP_API_URL}/api/${branchId}/sendreport`,
         { stockReport: reportData },
         { headers: { "Content-Type": "application/json" } }
       );

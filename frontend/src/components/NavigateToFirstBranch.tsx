@@ -17,7 +17,7 @@ const NavigateToFirstBranch: React.FC = () => {
         const branches: IBranch[] = await getBranches();
         if (branches.length > 0) {
           setLoading(false);
-          navigate(`/branch/${branches[0]._id}/items`, { replace: true });
+          navigate(`${process.env.REACT_APP_API_URL}/branch/${branches[0]._id}/items`, { replace: true });
         } else {
           setLoading(false);
           navigate(`/create-branch`, { replace: true });

@@ -3,7 +3,7 @@
 import axios from '../utils/axiosInstance';
 import { IBranch } from '../types';
 
-const API_URL = '/api/branches';
+const API_URL = `${process.env.REACT_APP_API_URL}/api/branches`;
 
 export const getBranches = async (): Promise<IBranch[]> => {
   const response = await axios.get<IBranch[]>(API_URL);
