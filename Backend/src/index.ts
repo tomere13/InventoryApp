@@ -9,7 +9,7 @@ import authRoutes from './routes/auth';
 import branchRoutes from './routes/branchRoutes';
 import sendReport from './routes/sendReport';
 import reports from './routes/reports';
-
+import axios from 'axios'; // Add axios for pinging
 
 
 const app: Application = express();
@@ -33,6 +33,18 @@ app.use('/api/reports', reports); // Mount reports router once
 app.use('/api/:branchId/items', itemRoutes);
 app.use('/api', sendReport);
 
+// Self-ping function to keep the backend awake
+const keepAlive = () => {
+  const backendUrl = process.env.BACKEND_URL || `http://localhost:${PORT}`;
+  setInterval(async () => {
+    try {
+      const response = await axios.get(backendUrl); // Ping the backend URL
+      console.log('Pinged backend to keep alive:', response.status);
+    } catch (error) {
+      console.error('Error pinging backend to keep alive:');
+    }
+  }, 10 * 60 * 1000); // Ping every 10 minutes
+};
 
 
 // Start the server after connecting to MongoDB
@@ -44,6 +56,7 @@ mongoose
     console.log('Connected to MongoDB Atlas');
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
+      keepAlive();
     });
   })
   .catch((error) => {
