@@ -100,8 +100,7 @@ const SendReport: React.FC = () => {
       // navigate(`/branch/${branchId}/items`);
     } catch (err: any) {
       console.error(err);
-      const errorMessage =
-        err.response?.data?.message || "אירעה שגיאה בשליחת הדוח. אנא נסה שוב.";
+      const errorMessage = "אירעה שגיאה בשליחת הדוח. אנא נסה שוב.";
       setError(errorMessage);
     } finally {
       setSubmitting(false);
