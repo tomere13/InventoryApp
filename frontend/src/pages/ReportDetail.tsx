@@ -145,7 +145,7 @@ const ReportDetail: React.FC = () => {
                 <strong>תיאור:</strong> {it.itemId ? it.itemId.description : "N/A"}
               </Typography>
               <Typography variant="body1">
-                <strong>מחיר:</strong> ₪{it.itemId ? it.itemId?.price : "N/A"}
+                <strong>מחיר:</strong> ₪{it.itemId ? it.itemId.price : "N/A"}
               </Typography>
               <Typography variant="body1">
                 <strong>מלאי להזמנה:</strong> {it.currentStock}
