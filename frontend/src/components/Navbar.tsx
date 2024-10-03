@@ -11,27 +11,24 @@ import {
   IconButton,
 } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
-import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid"; // Example icon, replace with your logo if available
+import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
 import { useNavigate } from "react-router-dom";
 const Navbar: React.FC = () => {
   const { token, role, logout } = useContext(AuthContext);
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate(); 
 
   const handleLogout = async () => {
     try {
-      await logout(); // Perform the logout action
-      navigate("/"); // Redirect to the homepage
+      await logout(); 
+      navigate("/"); 
     } catch (error) {
       console.error("Logout failed:", error);
-      // Optionally, handle the error (e.g., display a notification)
     }
   };
   return (
     <AppBar position="static" color="default" elevation={1}>
       <Toolbar>
-        {/* Logo and Title */}
         <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
-          {/* Replace PhoneAndroidIcon with your logo if available */}
           <IconButton
             edge="start"
             color="inherit"

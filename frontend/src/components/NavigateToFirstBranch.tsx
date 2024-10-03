@@ -16,11 +16,9 @@ const NavigateToFirstBranch: React.FC = () => {
       try {
         const branches: IBranch[] = await getBranches();
         if (branches.length > 0) {
-          // Set loading to false before navigation
           setLoading(false);
           navigate(`/branch/${branches[0]._id}/items`, { replace: true });
         } else {
-          // Set loading to false before navigating to create branch page
           setLoading(false);
           navigate(`/create-branch`, { replace: true });
         }

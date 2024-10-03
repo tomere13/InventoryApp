@@ -2,7 +2,7 @@
 
 import express from 'express';
 import { createBranch, getAllBranches, getBranchById } from '../controllers/branchController';
-import { authenticate, authorize } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import itemRoutes from './itemRoutes'; // Import item routes
 
 const router = express.Router();

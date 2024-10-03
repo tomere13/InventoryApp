@@ -15,4 +15,3 @@ export const createBranch = async (branchData: { name: string; address: string }
   return response.data;
 };
 
-// Additional functions for updating and deleting branches can be added similarly.

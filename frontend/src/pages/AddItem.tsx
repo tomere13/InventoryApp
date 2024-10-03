@@ -18,7 +18,7 @@ import {
 
 const AddItem: React.FC = () => {
   const navigate = useNavigate();
-  const { branchId } = useParams<{ branchId: string }>(); // Extract branchId from URL
+  const { branchId } = useParams<{ branchId: string }>(); 
 
   // State to manage the new item
   const [item, setItem] = useState<INewItem>({
@@ -26,18 +26,16 @@ const AddItem: React.FC = () => {
     description: "",
     quantity: 0,
     price: 0,
-    branch: branchId || "", // Initialize with branchId if available
+    branch: branchId || "", 
   });
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Ensure that branchId is present
   useEffect(() => {
     if (!branchId) {
       setError("Branch ID is missing. Cannot add item.");
     } else {
-      console.log("branchId:", branchId); // Log the branchId for debugging
       setItem((prevItem) => ({
         ...prevItem,
         branch: branchId,
@@ -87,7 +85,7 @@ const AddItem: React.FC = () => {
         item
       );
       console.log("Item added:", response.data);
-      navigate(`/branch/${item.branch}/items`); // Redirect to the item's branch list
+      navigate(`/branch/${item.branch}/items`); 
     } catch (err: any) {
       console.error("Error adding item:", err);
       setError(
@@ -98,7 +96,7 @@ const AddItem: React.FC = () => {
     }
   };
 
-  // If there's an error with branchId, display an alert
+
   if (error && !loading) {
     return (
       <Container maxWidth="sm">
@@ -109,7 +107,6 @@ const AddItem: React.FC = () => {
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
-          {/* Optionally, provide a button to navigate back or to select a branch */}
           <Button
             variant="contained"
             color="primary"
@@ -181,7 +178,7 @@ const AddItem: React.FC = () => {
             sx={{
               mt: 3,
               backgroundColor: "#333333", // Dark background color
-              color: "#ffffff", // White text color
+              color: "#ffffff", 
               "&:hover": {
                 backgroundColor: "#555555", // Slightly lighter dark on hover
               },

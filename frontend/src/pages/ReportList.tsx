@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import axios from '../utils/axiosInstance';
-import { IReport, IBranch } from '../types';
+import { IReport } from '../types';
 import {
   Container,
   Typography,
@@ -19,10 +19,6 @@ import {
   IconButton,
   Tooltip,
   TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Grid,
   Button,
 } from '@mui/material';
@@ -31,7 +27,6 @@ import { Link } from 'react-router-dom';
 
 const ReportList: React.FC = () => {
   const [reports, setReports] = useState<IReport[]>([]);
-  const [branches, setBranches] = useState<IBranch[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,7 +47,6 @@ const ReportList: React.FC = () => {
         console.log('Branches API Response:', branchesResponse.data);
         
         setReports(reportsResponse.data.reports || []);
-        setBranches(branchesResponse.data.branches || []);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -111,7 +105,7 @@ const ReportList: React.FC = () => {
             />
           </Grid>
 
-          
+  
 
           {/* Start Date Input */}
           <Grid item xs={12} sm={6} md={2}>

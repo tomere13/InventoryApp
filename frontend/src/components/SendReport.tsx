@@ -1,7 +1,7 @@
 // src/components/SendReport.tsx
 
 import React, { useState, useEffect, useContext, ChangeEvent } from "react";
-import axios from "../utils/axiosInstance"; // Ensure this is correctly set up to handle API requests
+import axios from "../utils/axiosInstance"; 
 import { IItem, IStockReport } from "../types";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";

@@ -8,7 +8,6 @@ interface JwtPayload {
   exp: number; // Expiration time
   iat: number; // Issued at
   sub: string; // Subject (e.g., user ID)
-  // Add other fields as necessary
 }
 
 // Define the context type

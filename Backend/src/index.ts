@@ -1,6 +1,6 @@
 // backend/src/index.ts
 
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -13,6 +13,7 @@ import reports from './routes/reports';
 
 
 const app: Application = express();
+
 // Load environment variables
 dotenv.config();
 
@@ -21,14 +22,12 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api/branches', branchRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/branches', branchRoutes);
 app.use('/api/reports', reports); // Mount reports router once
-
 app.use('/api/:branchId/items', itemRoutes);
 app.use('/api', sendReport);
 
-dotenv.config();
 
 
 // Start the server after connecting to MongoDB

@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
 import NavigateToFirstBranch from "../components/NavigateToFirstBranch";
-// Remove the import if using Navigate directly
+
 // import NavigateToFirstBranch from "../components/NavigateToFirstBranch";
 
 const HomePage: React.FC = () => {
@@ -25,14 +25,13 @@ const HomePage: React.FC = () => {
 
   // Redirect if user is logged in
   if (role) {
-    
     return <NavigateToFirstBranch />;
   }
 
   return (
     <Box
       sx={{
-        position: "relative", // Position relative to contain the overlay
+        position: "relative",
         minHeight: "100vh",
         background: "linear-gradient(135deg, #2e2e2e 0%, #fafafa 80%)", // Dark grey gradient
         backgroundRepeat: "no-repeat",
@@ -43,7 +42,6 @@ const HomePage: React.FC = () => {
         justifyContent: "center",
         padding: 4,
         "&::before": {
-          // Pseudo-element for overlay
           content: '""',
           position: "absolute",
           top: 0,
@@ -58,7 +56,7 @@ const HomePage: React.FC = () => {
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 2 }}>
         <Card
           sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.85)", // Slightly opaque for better readability
+            backgroundColor: "rgba(255, 255, 255, 0.85)",
             borderRadius: 4,
             boxShadow: 6,
             padding: { xs: 2, md: 4 },
@@ -72,30 +70,26 @@ const HomePage: React.FC = () => {
                   עובד יקר, ברוך הבא
                 </Typography>
                 <Typography variant="h6" color="text.secondary" paragraph>
-                   .הכנס למשתמש על מנת להשתמש באתר 
+                  .הכנס למשתמש על מנת להשתמש באתר
                 </Typography>
                 <Box sx={{ mt: 4 }}>
-                  {/* Since redirection is handled above, role check here might be redundant */}
-                  {!role && (
-                    <Button
-                      variant="contained"
-                      component={RouterLink}
-                      to="/login"
-                      sx={{
-                        mr: 2,
-                        mb: { xs: 2, sm: 0 },
-                        transition: "transform 0.3s",
-                        backgroundColor: "#333333", // Dark background color
-                          color: "#ffffff", // White text color
-                          "&:hover": {
-                            backgroundColor: "#555555", // Slightly lighter dark on hover
-                          },
-                      }}
-                    >
-                      התחבר
-                    </Button>
-                  )}
-                 
+                  <Button
+                    variant="contained"
+                    component={RouterLink}
+                    to="/login"
+                    sx={{
+                      mr: 2,
+                      mb: { xs: 2, sm: 0 },
+                      transition: "transform 0.3s",
+                      backgroundColor: "#333333", // Dark background color
+                      color: "#ffffff", // White text color
+                      "&:hover": {
+                        backgroundColor: "#555555", // Slightly lighter dark on hover
+                      },
+                    }}
+                  >
+                    התחבר
+                  </Button>
                 </Box>
               </CardContent>
             </Grid>

@@ -1,14 +1,13 @@
 // src/components/BranchSelector.tsx
 
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Select, MenuItem, FormControl, InputLabel, CircularProgress, Alert, SelectChangeEvent } from "@mui/material";
 import { IBranch } from "../types";
 import { getBranches } from '../services/branchService';
 
 const BranchSelector: React.FC = () => {
   const { branchId } = useParams<{ branchId: string }>();
-  const navigate = useNavigate();
   const [branches, setBranches] = useState<IBranch[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

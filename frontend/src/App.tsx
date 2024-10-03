@@ -15,6 +15,7 @@ import HomePage from './pages/HomePage';
 import SendReport from './components/SendReport';
 import ReportList from './pages/ReportList';
 import ReportDetail from './pages/ReportDetail';
+
 const theme = createTheme({
   palette: {
     primary: {

@@ -9,19 +9,13 @@ import {
   Typography,
   Box,
   Alert,
-  Checkbox,
-  FormControlLabel,
   CircularProgress,
-  Link,
   Card,
-  CardContent,
   Avatar,
-  Grid,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import NavigateToFirstBranch from '../components/NavigateToFirstBranch';
 
 const Login: React.FC = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '', remember: false });
@@ -51,7 +45,7 @@ const Login: React.FC = () => {
       });
       const { token, role } = response.data;
       login(token, role);
-      navigate('/'); // Replace '/first-branch' with the correct route
+      navigate('/'); 
 
     } catch (error: any) {
       console.error('Login error:', error);
@@ -65,7 +59,7 @@ const Login: React.FC = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundColor: '#fafafa', // Light gray background color
+        backgroundColor: '#fafafa',
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -78,7 +72,7 @@ const Login: React.FC = () => {
             padding: 4,
             boxShadow: 6,
             borderRadius: 2,
-            backgroundColor: "#ffffff", // White background for the card
+            backgroundColor: "#ffffff",
           }}
         >
           <Box
@@ -88,10 +82,10 @@ const Login: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, backgroundColor: '#333333', // Dark background color
-    color: '#ffffff', // White text color
+            <Avatar sx={{ m: 1, backgroundColor: '#333333',
+    color: '#ffffff',
     '&:hover': {
-      backgroundColor: '#555555', // Slightly lighter dark on hover
+      backgroundColor: '#555555',
     },}}>
               <LockOutlinedIcon />
             </Avatar>
@@ -136,10 +130,10 @@ const Login: React.FC = () => {
                 fullWidth
                 variant="contained"
                 disabled={loading}
-                sx={{ mt: 3, mb: 2, height: '56px',backgroundColor: '#333333', // Dark background color
-                  color: '#ffffff', // White text color
+                sx={{ mt: 3, mb: 2, height: '56px',backgroundColor: '#333333',
+                  color: '#ffffff',
                   '&:hover': {
-                    backgroundColor: '#555555', // Slightly lighter dark on hover
+                    backgroundColor: '#555555',
                   }, }}
               >
                 {loading ? <CircularProgress size={24} color="inherit" /> : 'התחבר'}

@@ -105,7 +105,7 @@ router.post('/:branchId/sendreport', async (req: Request, res: Response) => {
         service: 'gmail',
         auth: {
           user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS, // Use App Password here
+          pass: process.env.EMAIL_PASS, 
         },
       });
 
@@ -114,13 +114,6 @@ router.post('/:branchId/sendreport', async (req: Request, res: Response) => {
         to: 'etomer9@gmail.com',
         subject: `דוח הזנה למלאי - סניף ${branchName}`,
         text: emailContent,
-        // For HTML content, uncomment the line below and comment out the 'text' field
-        // html: `<p>${formattedDate}</p>
-        //        <p>הזנה למלאי נדרשת עבור הסניף:</p>
-        //        <ul>
-        //          ${itemsToOrder.map(item => `<li>${item.name}: להזמנה ${item.quantity} יחידות</li>`).join('')}
-        //        </ul>
-        //        ${notes ? `<p>הערות נוספות:</p><p>${notes}</p>` : ''}`,
       };
 
       console.log('Prepared mail options:', mailOptions);
