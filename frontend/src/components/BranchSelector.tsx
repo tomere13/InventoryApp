@@ -30,7 +30,7 @@ const BranchSelector: React.FC = () => {
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     const newBranchId = event.target.value;
-    window.location.href = `${process.env.REACT_APP_API_URL}/branch/${newBranchId}/items`;
+    window.location.href = `/branch/${newBranchId}/items`;
   };
 
   if (loading) return <CircularProgress />;
