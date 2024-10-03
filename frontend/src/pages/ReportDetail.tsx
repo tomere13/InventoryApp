@@ -139,13 +139,13 @@ const ReportDetail: React.FC = () => {
           <Card key={index} sx={{ mb: 2, textAlign: "right" }}>
             <CardContent>
               <Typography variant="subtitle1" gutterBottom>
-                <strong>שם מוצר:</strong> {it.itemId?.name || "N/A"}
+                <strong>שם מוצר:</strong> {it.itemId ? it.itemId.name : "N/A"}
               </Typography>
               <Typography variant="body1">
-                <strong>תיאור:</strong> {it.itemId?.description || "N/A"}
+                <strong>תיאור:</strong> {it.itemId ? it.itemId.description : "N/A"}
               </Typography>
               <Typography variant="body1">
-                <strong>מחיר:</strong> ₪{it.itemId?.price || "N/A"}
+                <strong>מחיר:</strong> ₪{it.itemId ? it.itemId?.price : "N/A"}
               </Typography>
               <Typography variant="body1">
                 <strong>מלאי להזמנה:</strong> {it.currentStock}
