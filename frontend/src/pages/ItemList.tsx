@@ -59,7 +59,7 @@ const ItemList: React.FC = () => {
   const deleteItem = (id: string) => {
     if (window.confirm(`האם אתה בטוח?`)) {
       axios
-        .delete(`${process.env.BACKEND_URL}/api/${branchId}/items/${id}`)
+        .delete(`${process.env.REACT_APP_API_URL}/api/${branchId}/items/${id}`)
         .then(() => {
           setItems(items.filter((item) => item._id !== id));
           console.log(`Deleted item with id: ${id}`);
