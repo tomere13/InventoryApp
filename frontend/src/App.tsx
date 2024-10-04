@@ -87,8 +87,6 @@ function App() {
             {/* Login Route */}
             <Route path="/login" element={<Login />} />
 
-            {/* Fallback Route for 404 */}
-            <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
       </AuthProvider>
@@ -96,11 +94,6 @@ function App() {
   );
 }
 
-// Simple NotFound component
-const NotFound: React.FC = () => (
-  <div style={{ textAlign: 'center', marginTop: '50px' }}>
-    <h2>404 - Page Not Found</h2>
-  </div>
-);
+
 
 export default App;
