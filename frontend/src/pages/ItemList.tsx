@@ -145,7 +145,7 @@ const ItemList: React.FC = () => {
                 <strong>תיאור</strong>
               </TableCell>
               <TableCell>
-                <strong>מחיר ($)</strong>
+                <strong>מחיר (₪)</strong>
               </TableCell>
               <TableCell>
                 <strong>כמות</strong>
