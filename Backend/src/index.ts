@@ -32,16 +32,7 @@ app.use('/api/reports', reports); // Mount reports router once
 app.use('/api/:branchId/items', itemRoutes);
 app.use('/api', sendReport);
 
-// Serve static frontend files in production
-if (process.env.NODE_ENV === 'production') {
-  // Serve static files from the frontend build folder
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-  // Catch-all route to serve the React app for any frontend route
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-  });
-}
 
 // Self-ping function to keep the backend awake (only run in server environment)
   const keepAlive = () => {
