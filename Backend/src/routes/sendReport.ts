@@ -111,7 +111,7 @@ router.post('/:branchId/sendreport', async (req: Request, res: Response) => {
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: 'etomer9@gmail.com',
+        to: 'mobicellsouth@gmail.com',
         subject: `דוח הזנה למלאי - סניף ${branchName}`,
         text: emailContent,
       };
