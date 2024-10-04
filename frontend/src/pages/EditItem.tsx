@@ -53,7 +53,7 @@ const EditItem: React.FC = () => {
     e.preventDefault();
     if (item) {
       axios
-        .patch<IItem>(`${process.env.REACT_APP_API_URL}api/branch/items/${id}`, item)
+        .patch<IItem>(`${process.env.BACKEND_URL}api/branch/items/${id}`, item)
         .then((response) => {
           console.log('Item updated:', response.data);
           navigate('/');

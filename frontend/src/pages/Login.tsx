@@ -41,6 +41,8 @@ const Login: React.FC = () => {
     setError(null);
     setLoading(true);
     try {
+      console.log(process.env.BACKEND_URL);
+      
       const response = await axios.post(
         `${process.env.BACKEND_URL}/api/auth/login`,
         {

@@ -81,7 +81,7 @@ const AddItem: React.FC = () => {
     try {
       // Post the new item to the specific branch
       const response = await axios.post<IItem>(
-        `${process.env.REACT_APP_API_URL}/api/${item.branch}/items`,
+        `${process.env.BACKEND_URL}/api/${item.branch}/items`,
         item
       );
       console.log("Item added:", response.data);
