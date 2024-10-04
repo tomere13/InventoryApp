@@ -67,12 +67,13 @@ const Login: React.FC = () => {
     <Box
     sx={{
       minHeight: "100vh",
-      background: "linear-gradient(70deg, #92D3CDFF 10%, #fafafa 80%)", // Dark grey gradient
+      background: "linear-gradient(70deg, #BFF9F3FF 10%, #fafafa 80%)", // Dark grey gradient
       display: "flex",
       alignItems: "center",
+      boxShadow: "0px 6px 18px rgba(0, 0, 0, 0.2)",  // Stronger shadow
+
       justifyContent: "center",
       padding: 2,
-      
     }}
     >
       <Container component="main" maxWidth="xs">

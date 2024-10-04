@@ -19,14 +19,14 @@ import ReportDetail from './pages/ReportDetail';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#63CBC1FF',
     },
     secondary: {
       main: '#dc004e',
     },
   },
   typography: {
-    fontFamily: "'Alef', sans-serif",  // Apply Hebrew font globally
+    fontFamily: "'Heebo', sans-serif",  // Apply Hebrew font globally
   },
 });
 

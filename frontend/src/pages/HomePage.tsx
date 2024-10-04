@@ -36,6 +36,8 @@ const HomePage: React.FC = () => {
         background: "linear-gradient(70deg, #92D3CDFF 10%, #fafafa 80%)", // Dark grey gradient
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
+        boxShadow: "0px 6px 18px rgba(0, 0, 0, 0.2)",  // Stronger shadow
+
         backgroundPosition: "center",
         display: "flex",
         alignItems: "center",
