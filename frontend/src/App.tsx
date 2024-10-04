@@ -36,12 +36,12 @@ function App() {
           <Routes>
             {/* Redirect root to the first branch or to create a branch if none exist */}
             <Route path="/" element={<HomePage />} />
-            <Route path="/reportspage" element={<ReportList />} />
-            <Route path="/reports/:reportId" element={<ReportDetail />} />
+            <Route path="/reportspage" element={<ProtectedRoute><ReportList /></ProtectedRoute>} />
+            <Route path="/reports/:reportId" element={<ProtectedRoute><ReportDetail /></ProtectedRoute>} />
 
             {/* Layout route for branch-specific pages */}
             <Route path="/branch/:branchId/*" element={<Layout />}>
-              <Route path="items" element={<ItemList />} />
+              <Route path="items" element={<ProtectedRoute><ItemList /></ProtectedRoute>} />
               <Route
             path="sendreport"
             element={
