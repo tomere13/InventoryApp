@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Login: React.FC = () => {
-  
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -38,13 +37,12 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
       const response = await axios.post(
-        `${process.env.BACKEND}/api/auth/login`,
+        `${process.env.REACT_APP_API_URL}/api/auth/login`,
         {
           username: credentials.username,
           password: credentials.password,
