@@ -27,6 +27,10 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Serve static files from the React app
+const CLIENT_BUILD_PATH = path.join(__dirname, '../client/build');
+app.use(express.static(CLIENT_BUILD_PATH));
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/branches', branchRoutes);
@@ -34,9 +38,9 @@ app.use('/api/reports', reports); // Mount reports router once
 app.use('/api/:branchId/items', itemRoutes);
 app.use('/api', sendReport);
 
-// Catch-all route for React Router
+// Catch-all Route to Handle Client-Side Routing
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  res.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
 });
 
 // Self-ping function to keep the backend awake
@@ -68,5 +72,3 @@ mongoose
   .catch((error) => {
     console.error('Error connecting to MongoDB', error);
   });
-
-  
