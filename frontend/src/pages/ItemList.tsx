@@ -110,11 +110,11 @@ const ItemList: React.FC = () => {
             <Button
               variant="contained"
               component={Link}
-              sx={{backgroundColor: "#333333", // Dark background color
-                color: "#ffffff", // White text color
+              sx={{backgroundColor: "#63CBC1FF", // Dark background color
+                color: "#000000FF", // White text color
                 "&:hover": {
-                  backgroundColor: "#555555", // Slightly lighter dark on hover
-                } }}
+                  backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
+                }, }}
               to={`/branch/${branchId}/sendreport`} // Navigate to the correct branch-specific send report page
               fullWidth={isSmallScreen}
             >

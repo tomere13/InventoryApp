@@ -27,7 +27,7 @@ const SendReport: React.FC = () => {
   const { branchId } = useParams<{ branchId: string }>();
   const { role } = useContext(AuthContext); // Access user role from context
   const navigate = useNavigate();
-
+const [presentStockNumber,setPresentStockNumber] = useState<number>();
   const [items, setItems] = useState<IItem[]>([]);
   const [stockData, setStockData] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState<boolean>(false);
@@ -69,6 +69,7 @@ const SendReport: React.FC = () => {
     itemId: string
   ) => {
     const value = parseInt(e.target.value, 10);
+    setPresentStockNumber(value);
     if (!isNaN(value) && value >= 0) {
       setStockData({
         ...stockData,
@@ -185,13 +186,14 @@ const SendReport: React.FC = () => {
                 <TableCell>{item.quantity}</TableCell>
                 <TableCell>
                   <TextField
+                    value={presentStockNumber}
                     type="number"
-                    inputProps={{ min: 0 }}
-                    value={stockData[item._id] || ""}
+                    required
                     onChange={(e) => handleStockChange(e, item._id)}
                     variant="outlined"
                     size="small"
                     fullWidth
+                    
                   />
                 </TableCell>
               </TableRow>
