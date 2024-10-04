@@ -1,5 +1,3 @@
-// backend/src/index.ts
-
 import express, { Application } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -10,8 +8,9 @@ import branchRoutes from './routes/branchRoutes';
 import sendReport from './routes/sendReport';
 import reports from './routes/reports';
 import axios from 'axios'; // Add axios for pinging
+import path from 'path'; // Required to serve React app in production
 
-
+// Initialize Express App
 const app: Application = express();
 
 // Load environment variables
@@ -19,46 +18,61 @@ dotenv.config();
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*', // Replace FRONTEND_URL with your frontend domain
+  origin: process.env.FRONTEND_URL || '*', // Use your frontend URL or allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true // Set to true if you need to send cookies
+  credentials: true, // Allow cookies if needed
 }));
-app.use(express.json());
+app.use(express.json()); // Parse incoming JSON
 
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/branches', branchRoutes);
 app.use('/api/reports', reports); // Mount reports router once
 app.use('/api/:branchId/items', itemRoutes);
 app.use('/api', sendReport);
 
-// Self-ping function to keep the backend awake
-const keepAlive = () => {
-  const backendUrl = process.env.BACKEND_URL || `http://localhost:${PORT}`;
-  setInterval(async () => {
-    try {
-      const response = await axios.get(backendUrl); // Ping the backend URL
-      console.log('Pinged backend to keep alive:', response.status);
-    } catch (error) {
-      console.error('Error pinging backend to keep alive:');
-    }
-  }, 10 * 60 * 1000); // Ping every 10 minutes
-};
+// Serve static frontend files in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the frontend build folder
+  app.use(express.static(path.join(__dirname, '../frontend/build')));
 
+  // Catch-all route to serve the React app for any frontend route
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  });
+}
 
-// Start the server after connecting to MongoDB
+// Self-ping function to keep the backend awake (only run in server environment)
+  const keepAlive = () => {
+    const backendUrl = process.env.BACKEND_URL || `http://localhost:${PORT}`;
+    setInterval(async () => {
+      try {
+        const response = await axios.get(backendUrl); // Ping the backend URL
+        console.log('Pinged backend to keep alive:', response.status);
+      } catch (error) {
+        console.error('Error pinging backend to keep alive:');
+      }
+    }, 10 * 60 * 1000); // Ping every 10 minutes
+  };
+
+// MongoDB Connection and Server Start
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI as string;
+
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB Atlas');
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
-      keepAlive();
+      
+      // Start the keepAlive function only on the server-side
+      if (typeof window === 'undefined') {
+        keepAlive();
+      }
     });
   })
   .catch((error) => {
-    console.error('Error connecting to MongoDB', error);
+    console.error('Error connecting to MongoDB:', error);
   });
