@@ -10,6 +10,7 @@ import branchRoutes from './routes/branchRoutes';
 import sendReport from './routes/sendReport';
 import reports from './routes/reports';
 import axios from 'axios'; // Add axios for pinging
+import path from 'path';
 
 
 const app: Application = express();
@@ -32,6 +33,11 @@ app.use('/api/branches', branchRoutes);
 app.use('/api/reports', reports); // Mount reports router once
 app.use('/api/:branchId/items', itemRoutes);
 app.use('/api', sendReport);
+
+// Catch-all route for React Router
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
 
 // Self-ping function to keep the backend awake
 const keepAlive = () => {
@@ -62,3 +68,5 @@ mongoose
   .catch((error) => {
     console.error('Error connecting to MongoDB', error);
   });
+
+  
