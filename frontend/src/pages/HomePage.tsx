@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
       sx={{
         position: "relative",
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #2e2e2e 0%, #fafafa 80%)", // Dark grey gradient
+        background: "linear-gradient(70deg, #92D3CDFF 10%, #fafafa 80%)", // Dark grey gradient
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -41,16 +41,7 @@ const HomePage: React.FC = () => {
         alignItems: "center",
         justifyContent: "center",
         padding: 4,
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.2)", // 20% opacity black overlay to darken
-          zIndex: 1,
-        },
+        
       }}
     >
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 2 }}>
@@ -81,10 +72,10 @@ const HomePage: React.FC = () => {
                       mr: 2,
                       mb: { xs: 2, sm: 0 },
                       transition: "transform 0.3s",
-                      backgroundColor: "#333333", // Dark background color
-                      color: "#ffffff", // White text color
+                      backgroundColor: "#63CBC1FF", // Dark background color
+                      color: "#000000FF", // White text color
                       "&:hover": {
-                        backgroundColor: "#555555", // Slightly lighter dark on hover
+                        backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
                       },
                     }}
                   >

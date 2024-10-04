@@ -116,11 +116,11 @@ const CreateBranch: React.FC = () => {
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ mt: 3,backgroundColor: "#333333", // Dark background color
-              color: "#ffffff", // White text color
+            sx={{ mt: 3,  backgroundColor: "#63CBC1FF", // Dark background color
+              color: "#000000FF", // White text color
               "&:hover": {
-                backgroundColor: "#555555", // Slightly lighter dark on hover
-              } }}
+                backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
+              }, }}
             disabled={loading}
           >
             {loading ? "יוצר.." : "צור סניף"}

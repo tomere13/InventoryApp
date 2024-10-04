@@ -1,7 +1,7 @@
 // src/pages/Login.tsx
 
-import React, { useState, useContext } from 'react';
-import axios from '../utils/axiosInstance';
+import React, { useState, useContext } from "react";
+import axios from "../utils/axiosInstance";
 import {
   Container,
   TextField,
@@ -12,25 +12,27 @@ import {
   CircularProgress,
   Card,
   Avatar,
-} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Login: React.FC = () => {
-  const [credentials, setCredentials] = useState({ username: '', password: '', remember: false });
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+    remember: false,
+  });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked, type } = e.target;
     setCredentials((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -39,17 +41,23 @@ const Login: React.FC = () => {
     setError(null);
     setLoading(true);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
-        username: credentials.username,
-        password: credentials.password,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/login`,
+        {
+          username: credentials.username,
+          password: credentials.password,
+        }
+      );
       const { token, role } = response.data;
       login(token, role);
-      navigate('/'); 
-
+      navigate("/");
     } catch (error: any) {
-      console.error('Login error:', error);
-      setError(error.reaponse ? error.response.data.message : 'Invalid username or password.');
+      console.error("Login error:", error);
+      setError(
+        error.reaponse
+          ? error.response.data.message
+          : "Invalid username or password."
+      );
     } finally {
       setLoading(false);
     }
@@ -57,14 +65,15 @@ const Login: React.FC = () => {
 
   return (
     <Box
-      sx={{
-        minHeight: "100vh",
-        backgroundColor: '#fafafa',
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 2,
-      }}
+    sx={{
+      minHeight: "100vh",
+      background: "linear-gradient(70deg, #92D3CDFF 10%, #fafafa 80%)", // Dark grey gradient
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 2,
+      
+    }}
     >
       <Container component="main" maxWidth="xs">
         <Card
@@ -77,23 +86,28 @@ const Login: React.FC = () => {
         >
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, backgroundColor: '#333333',
-    color: '#ffffff',
-    '&:hover': {
-      backgroundColor: '#555555',
-    },}}>
+            <Avatar
+              sx={{
+                m: 1,
+                backgroundColor: "#63CBC1FF", 
+                color: "#000000FF", 
+                "&:hover": {
+                  backgroundColor: "#BFF9F3FF", 
+                },
+              }}
+            >
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               התחבר
             </Typography>
             {error && (
-              <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+              <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
                 {error}
               </Alert>
             )}
@@ -124,21 +138,29 @@ const Login: React.FC = () => {
                 onChange={handleChange}
                 variant="outlined"
               />
-              
+
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 disabled={loading}
-                sx={{ mt: 3, mb: 2, height: '56px',backgroundColor: '#333333',
-                  color: '#ffffff',
-                  '&:hover': {
-                    backgroundColor: '#555555',
-                  }, }}
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  height: "56px",
+                  backgroundColor: "#63CBC1FF", // Dark background color
+                  color: "#000000FF", // White text color
+                  "&:hover": {
+                    backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
+                  },
+                }}
               >
-                {loading ? <CircularProgress size={24} color="inherit" /> : 'התחבר'}
+                {loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "התחבר"
+                )}
               </Button>
-              
             </Box>
           </Box>
         </Card>

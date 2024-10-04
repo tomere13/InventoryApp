@@ -74,6 +74,7 @@ const ItemList: React.FC = () => {
         variant={isSmallScreen ? "h5" : "h4"}
         align="center"
         gutterBottom
+        
       >
         מוצרי מלאי
       </Typography>
@@ -93,11 +94,11 @@ const ItemList: React.FC = () => {
               to={`/branch/${branchId}/add`} // Navigate to the correct branch-specific add item page
               fullWidth={isSmallScreen}
               sx={{
-                backgroundColor: "#333333", // Dark background color
-                color: "#ffffff", // White text color
-                "&:hover": {
-                  backgroundColor: "#555555", // Slightly lighter dark on hover
-                },
+                backgroundColor: "#63CBC1FF", // Dark background color
+                      color: "#000000FF", // White text color
+                      "&:hover": {
+                        backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
+                      },
               }}
             >
               + הוסף מוצר חדש

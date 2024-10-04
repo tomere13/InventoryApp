@@ -25,6 +25,9 @@ const theme = createTheme({
       main: '#dc004e',
     },
   },
+  typography: {
+    fontFamily: "'Alef', sans-serif",  // Apply Hebrew font globally
+  },
 });
 
 function App() {
