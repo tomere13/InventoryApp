@@ -10,7 +10,6 @@ import branchRoutes from './routes/branchRoutes';
 import sendReport from './routes/sendReport';
 import reports from './routes/reports';
 import axios from 'axios'; // Add axios for pinging
-import path from 'path';
 
 
 const app: Application = express();
@@ -27,21 +26,12 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Serve static files from the React app
-const CLIENT_BUILD_PATH = path.join(__dirname, '../client/build');
-app.use(express.static(CLIENT_BUILD_PATH));
-
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/branches', branchRoutes);
 app.use('/api/reports', reports); // Mount reports router once
 app.use('/api/:branchId/items', itemRoutes);
 app.use('/api', sendReport);
-
-// Catch-all Route to Handle Client-Side Routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
-});
 
 // Self-ping function to keep the backend awake
 const keepAlive = () => {
