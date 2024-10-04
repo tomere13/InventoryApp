@@ -159,7 +159,7 @@ const AddItem: React.FC = () => {
             fullWidth
             required
             margin="normal"
-            inputProps={{ min: 1 }}
+            inputProps={{ min: 1,style: { textAlign: "left" } }}
           />
           <TextField
             label="מחיר"
@@ -169,7 +169,7 @@ const AddItem: React.FC = () => {
             type="number"
             fullWidth
             margin="normal"
-            inputProps={{ min: 0, step: 0.01 }}
+            inputProps={{ min: 0, step: 0.01,style: { textAlign: "left" } }}
           />
           <Button
             type="submit"

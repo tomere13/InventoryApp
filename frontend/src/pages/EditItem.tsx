@@ -118,8 +118,8 @@ const EditItem: React.FC = () => {
             fullWidth
             required
             margin="normal"
-            inputProps={{ min: 1 }}
-          />
+            inputProps={{ min: 1, style: { textAlign: "left" } }} // Align text to the left
+            />
           <TextField
             label="מחיר"
             name="price"
@@ -128,7 +128,7 @@ const EditItem: React.FC = () => {
             type="number"
             fullWidth
             margin="normal"
-            inputProps={{ min: 0, step: 0.01 }}
+            inputProps={{ min: 0, step: 0.01,style: { textAlign: "left" } }}
           />
           <Button
             type="submit"
