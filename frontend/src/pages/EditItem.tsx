@@ -112,7 +112,7 @@ const EditItem: React.FC = () => {
           <TextField
             label="כמות"
             name="quantity"
-            value={item.quantity}
+            value={item.quantity === 0 ? "" : item.quantity} // Display empty string if value is 0}
             onChange={handleChange}
             type="number"
             fullWidth
@@ -123,7 +123,7 @@ const EditItem: React.FC = () => {
           <TextField
             label="מחיר"
             name="price"
-            value={item.price}
+            value={item.price === 0 ? "" : item.price} // Display empty string if value is 0
             onChange={handleChange}
             type="number"
             fullWidth
