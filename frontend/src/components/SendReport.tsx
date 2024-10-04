@@ -206,11 +206,11 @@ const [presentStockNumber,setPresentStockNumber] = useState<number>();
           onClick={handleSubmit}
           sx={{
             mt: 3,
-            backgroundColor: "#333333", // Dark background color
-            color: "#ffffff", // White text color
-            "&:hover": {
-              backgroundColor: "#555555", // Slightly lighter dark on hover
-            },
+            backgroundColor: "#63CBC1FF", // Dark background color
+              color: "#000000FF", // White text color
+              "&:hover": {
+                backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
+              },
           }}
           disabled={submitting || !isFormValid()}
         >
