@@ -16,8 +16,10 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import dotenv from 'dotenv';
 
 const Login: React.FC = () => {
+  
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -37,14 +39,14 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    dotenv.config();
+
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      console.log(process.env.BACKEND_URL);
-      
       const response = await axios.post(
-        `${process.env.BACKEND_URL}/api/auth/login`,
+        `${process.env.Backend_URL}/api/auth/login`,
         {
           username: credentials.username,
           password: credentials.password,

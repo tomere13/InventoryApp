@@ -45,7 +45,7 @@ const ItemList: React.FC = () => {
     console.log(`Fetching items for branchId: ${branchId}`);
 
     axios
-      .get<IItem[]>(`${process.env.REACT_APP_API_URL}/api/${branchId}/items`)
+      .get<IItem[]>(`${process.env.BACKEND_URL}/api/${branchId}/items`)
       .then((response) => {
         const filteredItems = response.data.filter(
           (item) => item.branch === branchId
@@ -59,7 +59,7 @@ const ItemList: React.FC = () => {
   const deleteItem = (id: string) => {
     if (window.confirm(`האם אתה בטוח?`)) {
       axios
-        .delete(`${process.env.REACT_APP_API_URL}/api/${branchId}/items/${id}`)
+        .delete(`${process.env.BACKEND_URL}/api/${branchId}/items/${id}`)
         .then(() => {
           setItems(items.filter((item) => item._id !== id));
           console.log(`Deleted item with id: ${id}`);
