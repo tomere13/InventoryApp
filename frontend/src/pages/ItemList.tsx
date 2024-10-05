@@ -74,7 +74,6 @@ const ItemList: React.FC = () => {
         variant={isSmallScreen ? "h5" : "h4"}
         align="center"
         gutterBottom
-        
       >
         מוצרי מלאי
       </Typography>
@@ -95,10 +94,10 @@ const ItemList: React.FC = () => {
               fullWidth={isSmallScreen}
               sx={{
                 backgroundColor: "#63CBC1FF", // Dark background color
-                      color: "#000000FF", // White text color
-                      "&:hover": {
-                        backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
-                      },
+                color: "#000000FF", // White text color
+                "&:hover": {
+                  backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
+                },
               }}
             >
               + הוסף מוצר חדש
@@ -110,11 +109,13 @@ const ItemList: React.FC = () => {
             <Button
               variant="contained"
               component={Link}
-              sx={{backgroundColor: "#63CBC1FF", // Dark background color
+              sx={{
+                backgroundColor: "#63CBC1FF", // Dark background color
                 color: "#000000FF", // White text color
                 "&:hover": {
                   backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
-                }, }}
+                },
+              }}
               to={`/branch/${branchId}/sendreport`} // Navigate to the correct branch-specific send report page
               fullWidth={isSmallScreen}
             >
@@ -126,131 +127,142 @@ const ItemList: React.FC = () => {
 
       {/* Table Section */}
       <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
-  <Table
-    aria-label="item table"
-    sx={{
-      minWidth: 200,
-      "& th, & td": {
-        padding: isSmallScreen ? theme.spacing(0.1) : theme.spacing(2),
-        fontSize: isSmallScreen ? "0.875rem" : "1rem",
-      },
-    }}
-  >
-    <TableHead>
-      <TableRow>
-        <TableCell>
-          <strong>שם</strong>
-        </TableCell>
-        <TableCell>
-          <strong>תיאור</strong>
-        </TableCell>
-
-        {/* Conditionally render the columns based on screen size */}
-        {!isSmallScreen && (
-          <>
-            <TableCell>
-              <strong>מחיר (₪)</strong>
-            </TableCell>
-            <TableCell>
-              <strong>כמות</strong>
-            </TableCell>
-            <TableCell>
-              <strong>תאריך הוספה</strong>
-            </TableCell>
-          </>
-        )}
-
-        {role === "admin" && (
-          <TableCell align="center">
-            <strong>פעולות</strong>
-          </TableCell>
-        )}
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {items.length === 0 ? (
-        <TableRow>
-          {/* Adjust colSpan based on the number of visible columns */}
-          <TableCell
-            colSpan={
-              role === "admin"
-                ? isSmallScreen
-                  ? 3 // Name, Description, Actions
-                  : 6 // All columns including admin actions
-                : isSmallScreen
-                ? 2 // Name, Description
-                : 5 // All columns excluding admin actions
-            }
-            align="center"
-          >
-            אין מוצרים זמינים.
-          </TableCell>
-        </TableRow>
-      ) : (
-        items.map((item) => (
-          <TableRow key={item._id} hover>
-            <TableCell>{item.name}</TableCell>
-            <TableCell>{item.description || "N/A"}</TableCell>
-
-            {/* Conditionally render the data cells based on screen size */}
-            {!isSmallScreen && (
-              <>
-                <TableCell>
-                  {item.price ? item.price.toFixed(2) : "N/A"}
-                </TableCell>
-                <TableCell>{item.quantity}</TableCell>
-                <TableCell>
-                  {item.dateAdded
-                    ? new Date(item.dateAdded).toLocaleDateString()
-                    : "N/A"}
-                </TableCell>
-              </>
-            )}
-
-            {role === "admin" && (
-              <TableCell align="center">
-                {/* Conditionally render Edit and Delete buttons */}
-                <>
-                  {/* Edit Button */}
-                  <IconButton
-                    component={Link}
-                    to={`/branch/${branchId}/edit/${item._id}`}
-                    sx={{
-                      backgroundColor: "#FFC107", // Amber (yellow) color
-                      color: "#ffffff",
-                      mr: 1, // Margin right to add spacing between buttons
-                      "&:hover": {
-                        backgroundColor: "#FFA000", // Darker amber on hover
-                      },
-                    }}
-                    size={isSmallScreen ? "small" : "medium"}
-                  >
-                    <Edit />
-                  </IconButton>
-
-                  {/* Delete Button */}
-                  <IconButton
-                    onClick={() => deleteItem(item._id!)}
-                    size={isSmallScreen ? "small" : "medium"}
-                    sx={{
-                      backgroundColor: "#F44336", // Red color
-                      color: "#ffffff",
-                      "&:hover": {
-                        backgroundColor: "#D32F2F", // Darker red on hover
-                      },
-                    }}
-                  >
-                    <Delete />
-                  </IconButton>
-                </>
+        <Table
+          aria-label="item table"
+          sx={{
+            minWidth: 360,
+            "& th, & td": {
+              padding: isSmallScreen ? theme.spacing(0.1) : theme.spacing(2),
+              fontSize: isSmallScreen ? "0.875rem" : "1rem",
+            },
+          }}
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <strong>שם</strong>
               </TableCell>
+              <TableCell>
+                <strong>תיאור</strong>
+              </TableCell>
+
+              {/* Conditionally render the columns based on screen size */}
+              {!isSmallScreen && (
+                <>
+                  <TableCell>
+                    <strong>מחיר (₪)</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>כמות</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>תאריך הוספה</strong>
+                  </TableCell>
+                </>
+              )}
+
+              {role === "admin" && (
+                <TableCell align="center">
+                  <strong>פעולות</strong>
+                </TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {items.length === 0 ? (
+              <TableRow>
+                {/* Adjust colSpan based on the number of visible columns */}
+                <TableCell
+                  colSpan={
+                    role === "admin"
+                      ? isSmallScreen
+                        ? 3 // Name, Description, Actions
+                        : 6 // All columns including admin actions
+                      : isSmallScreen
+                      ? 2 // Name, Description
+                      : 5 // All columns excluding admin actions
+                  }
+                  align="center"
+                >
+                  אין מוצרים זמינים.
+                </TableCell>
+              </TableRow>
+            ) : (
+              items.map((item) => (
+                <TableRow key={item._id} hover>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.description || "N/A"}</TableCell>
+
+                  {/* Conditionally render the data cells based on screen size */}
+                  {!isSmallScreen && (
+                    <>
+                      <TableCell>
+                        {item.price ? item.price.toFixed(2) : "N/A"}
+                      </TableCell>
+                      <TableCell>{item.quantity}</TableCell>
+                      <TableCell>
+                        {item.dateAdded
+                          ? new Date(item.dateAdded).toLocaleDateString()
+                          : "N/A"}
+                      </TableCell>
+                    </>
+                  )}
+
+                  {role === "admin" && (
+                    <TableCell align="center">
+                      {/* Conditionally render Edit and Delete buttons */}
+                      <>
+                        {/* Edit Button */}
+                        <IconButton
+                          component={Link}
+                          to={`/branch/${branchId}/edit/${item._id}`}
+                          sx={{
+                            backgroundColor: "#FFC107", // Amber color
+                            color: "#ffffff",
+                            mr: isSmallScreen ? 0.5 : 1, // Adjust margin on small screens
+                            width: isSmallScreen ? 30 : 40, // Adjust width
+                            height: isSmallScreen ? 30 : 40, // Adjust height
+                            "& .MuiSvgIcon-root": {
+                              fontSize: isSmallScreen ? 18 : 24, // Adjust icon size
+                            },
+                            "&:hover": {
+                              backgroundColor: "#FFA000", // Darker amber on hover
+                            },
+                          }}
+                          size={isSmallScreen ? "small" : "medium"}
+                        >
+                          <Edit />
+                        </IconButton>
+
+                        {/* Delete Button */}
+                        <IconButton
+                          onClick={() => deleteItem(item._id!)}
+                          size={isSmallScreen ? "small" : "medium"}
+                          sx={{
+                            backgroundColor: "#F44336", // Red color
+                            color: "#ffffff",
+                            mr: isSmallScreen ? 0.5 : 1, // Adjust margin on small screens
+                            width: isSmallScreen ? 30 : 40, // Adjust width
+                            height: isSmallScreen ? 30 : 40, // Adjust height
+                            "& .MuiSvgIcon-root": {
+                              fontSize: isSmallScreen ? 18 : 24, // Adjust icon size
+                            },
+                            "&:hover": {
+                              backgroundColor: "#D32F2F", // Darker red on hover
+                            },
+                          }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))
             )}
-          </TableRow>
-        ))
-      )}
-    </TableBody>
-  </Table>
-</TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 };
