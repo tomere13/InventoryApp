@@ -45,7 +45,7 @@ const ItemList: React.FC = () => {
     console.log(`Fetching items for branchId: ${branchId}`);
 
     axios
-      .get<IItem[]>(`${process.env.BACKEND_URL}/api/${branchId}/items`)
+      .get<IItem[]>(`${process.env.REACT_APP_API_URL}/api/${branchId}/items`)
       .then((response) => {
         const filteredItems = response.data.filter(
           (item) => item.branch === branchId
@@ -126,105 +126,131 @@ const ItemList: React.FC = () => {
 
       {/* Table Section */}
       <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
-        <Table
-          aria-label="item table"
-          sx={{
-            minWidth: 650,
-            "& th, & td": {
-              padding: isSmallScreen ? theme.spacing(1) : theme.spacing(2),
-              fontSize: isSmallScreen ? "0.875rem" : "1rem",
-            },
-          }}
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <strong>שם</strong>
-              </TableCell>
-              <TableCell>
-                <strong>תיאור</strong>
-              </TableCell>
-              <TableCell>
-                <strong>מחיר (₪)</strong>
-              </TableCell>
-              <TableCell>
-                <strong>כמות</strong>
-              </TableCell>
-              <TableCell>
-                <strong>תאריך הוספה</strong>
-              </TableCell>
-              {role === "admin" && (
-                <TableCell align="center">
-                  <strong>פעולות</strong>
-                </TableCell>
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {items.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={role === "admin" ? 6 : 5} align="center">
-                  אין מוצרים זמינים.
-                </TableCell>
-              </TableRow>
-            ) : (
-              items.map((item) => (
-                <TableRow key={item._id} hover>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.description || "N/A"}</TableCell>
-                  <TableCell>
-                    {item.price ? item.price.toFixed(2) : "N/A"}
-                  </TableCell>
-                  <TableCell>{item.quantity}</TableCell>
-                  <TableCell>
-                    {item.dateAdded
-                      ? new Date(item.dateAdded).toLocaleDateString()
-                      : "N/A"}
-                  </TableCell>
-                  {role === "admin" && (
-                    <TableCell align="center">
-                      {/* Conditionally render Edit and Delete buttons */}
-                      <>
-                        {/* Edit Button */}
-                        <IconButton
-                          component={Link}
-                          to={`/branch/${branchId}/edit/${item._id}`}
-                          sx={{
-                            backgroundColor: "#FFC107", // Amber (yellow) color
-                            color: "#ffffff",
-                            mr: 1, // Margin right to add spacing between buttons
-                            "&:hover": {
-                              backgroundColor: "#FFA000", // Darker amber on hover
-                            },
-                          }}
-                          size={isSmallScreen ? "small" : "medium"}
-                        >
-                          <Edit />
-                        </IconButton>
+  <Table
+    aria-label="item table"
+    sx={{
+      minWidth: 200,
+      "& th, & td": {
+        padding: isSmallScreen ? theme.spacing(0.1) : theme.spacing(2),
+        fontSize: isSmallScreen ? "0.875rem" : "1rem",
+      },
+    }}
+  >
+    <TableHead>
+      <TableRow>
+        <TableCell>
+          <strong>שם</strong>
+        </TableCell>
+        <TableCell>
+          <strong>תיאור</strong>
+        </TableCell>
 
-                        {/* Delete Button */}
-                        <IconButton
-                          onClick={() => deleteItem(item._id!)}
-                          size={isSmallScreen ? "small" : "medium"}
-                          sx={{
-                            backgroundColor: "#F44336", // Red color
-                            color: "#ffffff",
-                            "&:hover": {
-                              backgroundColor: "#D32F2F", // Darker red on hover
-                            },
-                          }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </>
-                    </TableCell>
-                  )}
-                </TableRow>
-              ))
+        {/* Conditionally render the columns based on screen size */}
+        {!isSmallScreen && (
+          <>
+            <TableCell>
+              <strong>מחיר (₪)</strong>
+            </TableCell>
+            <TableCell>
+              <strong>כמות</strong>
+            </TableCell>
+            <TableCell>
+              <strong>תאריך הוספה</strong>
+            </TableCell>
+          </>
+        )}
+
+        {role === "admin" && (
+          <TableCell align="center">
+            <strong>פעולות</strong>
+          </TableCell>
+        )}
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {items.length === 0 ? (
+        <TableRow>
+          {/* Adjust colSpan based on the number of visible columns */}
+          <TableCell
+            colSpan={
+              role === "admin"
+                ? isSmallScreen
+                  ? 3 // Name, Description, Actions
+                  : 6 // All columns including admin actions
+                : isSmallScreen
+                ? 2 // Name, Description
+                : 5 // All columns excluding admin actions
+            }
+            align="center"
+          >
+            אין מוצרים זמינים.
+          </TableCell>
+        </TableRow>
+      ) : (
+        items.map((item) => (
+          <TableRow key={item._id} hover>
+            <TableCell>{item.name}</TableCell>
+            <TableCell>{item.description || "N/A"}</TableCell>
+
+            {/* Conditionally render the data cells based on screen size */}
+            {!isSmallScreen && (
+              <>
+                <TableCell>
+                  {item.price ? item.price.toFixed(2) : "N/A"}
+                </TableCell>
+                <TableCell>{item.quantity}</TableCell>
+                <TableCell>
+                  {item.dateAdded
+                    ? new Date(item.dateAdded).toLocaleDateString()
+                    : "N/A"}
+                </TableCell>
+              </>
             )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+            {role === "admin" && (
+              <TableCell align="center">
+                {/* Conditionally render Edit and Delete buttons */}
+                <>
+                  {/* Edit Button */}
+                  <IconButton
+                    component={Link}
+                    to={`/branch/${branchId}/edit/${item._id}`}
+                    sx={{
+                      backgroundColor: "#FFC107", // Amber (yellow) color
+                      color: "#ffffff",
+                      mr: 1, // Margin right to add spacing between buttons
+                      "&:hover": {
+                        backgroundColor: "#FFA000", // Darker amber on hover
+                      },
+                    }}
+                    size={isSmallScreen ? "small" : "medium"}
+                  >
+                    <Edit />
+                  </IconButton>
+
+                  {/* Delete Button */}
+                  <IconButton
+                    onClick={() => deleteItem(item._id!)}
+                    size={isSmallScreen ? "small" : "medium"}
+                    sx={{
+                      backgroundColor: "#F44336", // Red color
+                      color: "#ffffff",
+                      "&:hover": {
+                        backgroundColor: "#D32F2F", // Darker red on hover
+                      },
+                    }}
+                  >
+                    <Delete />
+                  </IconButton>
+                </>
+              </TableCell>
+            )}
+          </TableRow>
+        ))
+      )}
+    </TableBody>
+  </Table>
+</TableContainer>
     </Container>
   );
 };

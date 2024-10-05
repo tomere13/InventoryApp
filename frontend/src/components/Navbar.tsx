@@ -48,6 +48,7 @@ const Navbar: React.FC = () => {
             sx={{
               textDecoration: "none",
               color: "inherit",
+              fontSize: { xs: "0.82rem", sm: "1rem" }, // Smaller font on extra-small screens
               fontWeight: "bold",
             }}
           >
