@@ -17,21 +17,23 @@ const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
 // Middleware
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Determine build path
-const buildPath = process.env.REACT_BUILD_PATH || path.join(__dirname, '..', 'frontend', 'build');
-app.use(express.static(buildPath, { fallthrough: true }));
+const buildPath =
+  process.env.REACT_BUILD_PATH || path.join(__dirname, '..', 'frontend', 'build');
+console.log('Serving static files from:', buildPath);
 
 // Serve static files from the React app's build directory
-console.log('Serving static files from:', buildPath);
-app.use(express.static(buildPath));
+app.use(express.static(buildPath, { index: false }));
 
 // API Routes
 app.use('/api/auth', authRoutes);
