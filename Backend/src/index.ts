@@ -28,8 +28,7 @@ app.use(
 app.use(express.json());
 
 // Determine build path
-const buildPath =
-  process.env.REACT_BUILD_PATH || path.join(__dirname, '..', 'frontend', 'build');
+const buildPath = path.join(__dirname, '..', '..', 'frontend', 'build');
 console.log('Serving static files from:', buildPath);
 
 // Serve static files from the React app's build directory
