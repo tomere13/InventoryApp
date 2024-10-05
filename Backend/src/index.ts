@@ -59,9 +59,8 @@ mongoose
       console.log(`Server running on port ${PORT}`);
       
       // Start the keepAlive function only on the server-side
-      if (typeof window === 'undefined') {
         keepAlive();
-      }
+      
     });
   })
   .catch((error) => {
