@@ -1,5 +1,4 @@
 // src/types.ts
-import mongoose, { Document, Schema } from 'mongoose';
 // Interface for each item in the stock report
 // Interface for each item in the stock report
 export interface IStockReportItem {
