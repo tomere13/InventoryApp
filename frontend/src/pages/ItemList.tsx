@@ -139,23 +139,23 @@ const ItemList: React.FC = () => {
         >
           <TableHead>
             <TableRow>
-              <TableCell>
+              <TableCell align="center">
                 <strong>שם</strong>
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <strong>תיאור</strong>
               </TableCell>
 
               {/* Conditionally render the columns based on screen size */}
               {!isSmallScreen && (
                 <>
-                  <TableCell>
+                  <TableCell align="center">
                     <strong>מחיר (₪)</strong>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <strong>כמות</strong>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <strong>תאריך הוספה</strong>
                   </TableCell>
                 </>
@@ -190,17 +190,17 @@ const ItemList: React.FC = () => {
             ) : (
               items.map((item) => (
                 <TableRow key={item._id} hover>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.description || "N/A"}</TableCell>
+                  <TableCell align="center">{item.name}</TableCell>
+                  <TableCell align="center">{item.description || "N/A"}</TableCell>
 
                   {/* Conditionally render the data cells based on screen size */}
                   {!isSmallScreen && (
                     <>
-                      <TableCell>
+                      <TableCell align="center">
                         {item.price ? item.price.toFixed(2) : "N/A"}
                       </TableCell>
-                      <TableCell>{item.quantity}</TableCell>
-                      <TableCell>
+                      <TableCell align="center">{item.quantity}</TableCell>
+                      <TableCell align="center">
                         {item.dateAdded
                           ? new Date(item.dateAdded).toLocaleDateString()
                           : "N/A"}
