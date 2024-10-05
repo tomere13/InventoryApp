@@ -171,8 +171,7 @@ const ReportList: React.FC = () => {
               <TableRow>
                 <TableCell><strong>סניף</strong></TableCell>
                 <TableCell><strong>תאריך נשלח</strong></TableCell>
-                <TableCell><strong>הערות</strong></TableCell>
-                <TableCell align="center"><strong>פעולות</strong></TableCell>
+                <TableCell align="center"><strong>פירוט</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -188,7 +187,6 @@ const ReportList: React.FC = () => {
                       minute: '2-digit',
                     })}
                   </TableCell>
-                  <TableCell>{report.notes || 'אין הערות'}</TableCell>
                   <TableCell align="center">
                     <Tooltip title="צפה בדוח">
                       <IconButton
