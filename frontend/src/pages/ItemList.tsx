@@ -191,7 +191,7 @@ const ItemList: React.FC = () => {
               items.map((item) => (
                 <TableRow key={item._id} hover>
                   <TableCell align="center">{item.name}</TableCell>
-                  <TableCell align="center">{item.description || "N/A"}</TableCell>
+                  <TableCell align="center">{item.description || "אין"}</TableCell>
 
                   {/* Conditionally render the data cells based on screen size */}
                   {!isSmallScreen && (
