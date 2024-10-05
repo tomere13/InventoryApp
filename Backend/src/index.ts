@@ -8,7 +8,6 @@ import branchRoutes from './routes/branchRoutes';
 import sendReport from './routes/sendReport';
 import reports from './routes/reports';
 import axios from 'axios'; // Add axios for pinging
-import path from 'path'; // Required to serve React app in production
 
 // Initialize Express App
 const app: Application = express();
