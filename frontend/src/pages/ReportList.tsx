@@ -21,6 +21,7 @@ import {
   TextField,
   Grid,
   Button,
+  Pagination, // Import Pagination component
 } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
@@ -35,6 +36,10 @@ const ReportList: React.FC = () => {
   const [selectedBranch, setSelectedBranch] = useState<string>(''); // For branch filter
   const [startDate, setStartDate] = useState<string>(''); // Using string to simplify
   const [endDate, setEndDate] = useState<string>('');
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const reportsPerPage = 13; // Number of reports per page
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,23 +63,23 @@ const ReportList: React.FC = () => {
     fetchData();
   }, []);
 
-  // Debugging: Log the reports to verify the structure
+  // Reset current page when filters change
   useEffect(() => {
-    console.log('Fetched Reports:', reports);
-  }, [reports]);
+    setCurrentPage(1);
+  }, [searchQuery, selectedBranch, startDate, endDate]);
 
   // Filtered reports based on search and filter criteria
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
       // Filter by selected branch
       const branchMatch = selectedBranch
-      ? report.branchId && report.branchId.name === selectedBranch
-      : true;
+        ? report.branchId && report.branchId.name === selectedBranch
+        : true;
 
       // Filter by search query (searching in branch name and notes)
       const searchMatch =
-      (report.branchId && report.branchId.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (report.notes && report.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+        (report.branchId && report.branchId.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (report.notes && report.notes.toLowerCase().includes(searchQuery.toLowerCase()));
 
       // Filter by date range
       const reportDate = new Date(report.dateSent);
@@ -84,6 +89,30 @@ const ReportList: React.FC = () => {
       return branchMatch && searchMatch && startDateMatch && endDateMatch;
     });
   }, [reports, searchQuery, selectedBranch, startDate, endDate]);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
+
+  // Get current page reports
+  const currentReports = useMemo(() => {
+    const startIndex = (currentPage - 1) * reportsPerPage;
+    const endIndex = startIndex + reportsPerPage;
+    return filteredReports.slice(startIndex, endIndex);
+  }, [filteredReports, currentPage]);
+
+  // Handle page change
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+  };
+
+  // Reset filters and pagination
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedBranch('');
+    setStartDate('');
+    setEndDate('');
+    setCurrentPage(1);
+  };
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
@@ -104,8 +133,6 @@ const ReportList: React.FC = () => {
               placeholder="חפש לפי שם סניף או הערות"
             />
           </Grid>
-
-  
 
           {/* Start Date Input */}
           <Grid item xs={12} sm={6} md={2}>
@@ -143,12 +170,7 @@ const ReportList: React.FC = () => {
               variant="outlined"
               color="secondary"
               fullWidth
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedBranch('');
-                setStartDate('');
-                setEndDate('');
-              }}
+              onClick={resetFilters}
             >
               איפוס מסננים
             </Button>
@@ -165,44 +187,60 @@ const ReportList: React.FC = () => {
       ) : filteredReports.length === 0 ? (
         <Alert severity="info">אין דוחות זמינים להצגה.</Alert>
       ) : (
-        <TableContainer component={Paper}>
-          <Table aria-label="reports table">
-            <TableHead>
-              <TableRow>
-                <TableCell><strong>סניף</strong></TableCell>
-                <TableCell><strong>תאריך נשלח</strong></TableCell>
-                <TableCell align="center"><strong>פירוט</strong></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredReports.map((report) => (
-                <TableRow key={report._id} hover>
-                  <TableCell>{report.branchId ? report.branchId.name : 'N/A'}</TableCell>
-                  <TableCell>
-                    {new Date(report.dateSent).toLocaleDateString('he-IL', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </TableCell>
-                  <TableCell align="center">
-                    <Tooltip title="צפה בדוח">
-                      <IconButton
-                        component={Link}
-                        to={`/reports/${report._id}`}
-                        color="primary"
-                      >
-                        <Visibility />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
+        <>
+          <TableContainer component={Paper}>
+            <Table aria-label="reports table">
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>סניף</strong></TableCell>
+                  <TableCell><strong>תאריך נשלח</strong></TableCell>
+                  <TableCell align="center"><strong>פירוט</strong></TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {currentReports.map((report) => (
+                  <TableRow key={report._id} hover>
+                    <TableCell>{report.branchId ? report.branchId.name : 'N/A'}</TableCell>
+                    <TableCell>
+                      {new Date(report.dateSent).toLocaleDateString('he-IL', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="צפה בדוח">
+                        <IconButton
+                          component={Link}
+                          to={`/reports/${report._id}`}
+                          color="primary"
+                        >
+                          <Visibility />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          {/* Pagination Component */}
+          {totalPages > 1 && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                variant="outlined"
+                shape="rounded"
+              />
+            </Box>
+          )}
+        </>
       )}
     </Container>
   );
