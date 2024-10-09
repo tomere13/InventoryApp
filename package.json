@@ -8,7 +8,9 @@
         "start-frontend": "cd Frontend && react-scripts start",
         "start-backend": "cd Backend && nodemon --watch src --exec ts-node src/index.ts",
         "build-backend": "cd Backend && tsc",
-        "build-frontend": "cd Frontend && react-scripts build"
+        "build-frontend": "cd Frontend && react-scripts build",
+        "dev": "concurrently \"npm run dev --prefix Backend\" \"npm start --prefix frontend\""
+
     },
     "eslintConfig": {
         "extends": [

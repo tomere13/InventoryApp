@@ -27,9 +27,16 @@ const SendReport: React.FC = () => {
   const { branchId } = useParams<{ branchId: string }>();
   const { role } = useContext(AuthContext); // Access user role from context
   const navigate = useNavigate();
-const [presentStockNumber,setPresentStockNumber] = useState<number>();
+  
+  // State to hold the raw input values as strings
+  const [presentStockNumber, setPresentStockNumber] = useState<{ [key: string]: string }>({});
+  
   const [items, setItems] = useState<IItem[]>([]);
+  
+  // State to hold the parsed numeric values
   const [stockData, setStockData] = useState<Record<string, number>>({});
+  
+  const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -68,13 +75,55 @@ const [presentStockNumber,setPresentStockNumber] = useState<number>();
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     itemId: string
   ) => {
-    const value = parseInt(e.target.value, 10);
-    setPresentStockNumber(value);
-    if (!isNaN(value) && value >= 0) {
-      setStockData({
-        ...stockData,
-        [itemId]: value,
+    const value = e.target.value;
+    const parsedValue = parseInt(value, 10);
+
+    // Update the raw input value
+    setPresentStockNumber((prevStock) => ({
+      ...prevStock,
+      [itemId]: value
+    }));
+
+    // Validate the input and update stockData and inputErrors accordingly
+    if (value === '') {
+      // Empty input
+      setInputErrors((prevErrors) => ({
+        ...prevErrors,
+        [itemId]: 'אנא הזן ערך',
+      }));
+      setStockData((prevStockData) => {
+        const newStockData = { ...prevStockData };
+        delete newStockData[itemId];
+        return newStockData;
       });
+    } else if (isNaN(parsedValue) || parsedValue < 0) {
+      // Invalid number
+      setInputErrors((prevErrors) => ({
+        ...prevErrors,
+        [itemId]: 'אנא הזן מספר חוקי',
+      }));
+    } else {
+      // Valid number
+      const item = items.find((item) => item._id === itemId);
+      if (item && parsedValue > item.quantity) {
+        // Input greater than current stock
+        setInputErrors((prevErrors) => ({
+          ...prevErrors,
+          [itemId]: 'הכמות המוזנת גדולה מהכמות הקיימת במלאי',
+        }));
+      } else {
+        // Input is valid, remove any existing error
+        setInputErrors((prevErrors) => {
+          const newErrors = { ...prevErrors };
+          delete newErrors[itemId];
+          return newErrors;
+        });
+      }
+      // Update stockData with the valid parsed value
+      setStockData((prevStockData) => ({
+        ...prevStockData,
+        [itemId]: parsedValue,
+      }));
     }
   };
 
@@ -98,7 +147,7 @@ const [presentStockNumber,setPresentStockNumber] = useState<number>();
 
       setSuccess("דוח נשלח בהצלחה. נשלח אימייל עם פרטי ההזמנה.");
       // Optionally, navigate to another page
-       navigate(`/branch/${branchId}/items`);
+      navigate(`/branch/${branchId}/items`);
     } catch (err: any) {
       console.error(err);
       const errorMessage = "אירעה שגיאה בשליחת הדוח. אנא נסה שוב.";
@@ -129,11 +178,15 @@ const [presentStockNumber,setPresentStockNumber] = useState<number>();
     }
   }, [role, navigate]);
 
+  // Validation function
   const isFormValid = () => {
-    return items.every((item) => {
-      const stock = stockData[item._id];
-      return stock !== undefined && stock >= 0;
-    });
+    return (
+      Object.keys(inputErrors).length === 0 &&
+      items.every((item) => {
+        const value = presentStockNumber[item._id];
+        return value !== undefined && value !== '';
+      })
+    );
   };
 
   if (loading) {
@@ -186,14 +239,16 @@ const [presentStockNumber,setPresentStockNumber] = useState<number>();
                 <TableCell>{item.quantity}</TableCell>
                 <TableCell>
                   <TextField
-                    value={presentStockNumber}
+                    id={item._id}
+                    value={presentStockNumber[item._id] || ''}
                     type="number"
                     required
                     onChange={(e) => handleStockChange(e, item._id)}
                     variant="outlined"
                     size="small"
                     fullWidth
-                    
+                    error={!!inputErrors[item._id]}
+                    helperText={inputErrors[item._id] || ''}
                   />
                 </TableCell>
               </TableRow>
@@ -207,10 +262,10 @@ const [presentStockNumber,setPresentStockNumber] = useState<number>();
           sx={{
             mt: 3,
             backgroundColor: "#63CBC1FF", // Dark background color
-              color: "#000000FF", // White text color
-              "&:hover": {
-                backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
-              },
+            color: "#000000FF", // Black text color
+            "&:hover": {
+              backgroundColor: "#BFF9F3FF", // Slightly lighter on hover
+            },
           }}
           disabled={submitting || !isFormValid()}
         >
