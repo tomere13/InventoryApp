@@ -23,6 +23,7 @@ import {
   Grid,
   useMediaQuery,
   useTheme,
+  CircularProgress, // Import CircularProgress
 } from "@mui/material";
 
 // Import AuthContext
@@ -33,6 +34,8 @@ const ItemList: React.FC = () => {
   const [items, setItems] = useState<IItem[]>([]);
   const { branchId } = useParams<{ branchId: string }>(); // Get branchId from the URL
 
+  const [loading, setLoading] = useState<boolean>(false); // Add loading state
+
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -41,6 +44,8 @@ const ItemList: React.FC = () => {
       console.error("No branchId provided in URL parameters.");
       return;
     }
+
+    setLoading(true); // Set loading to true when fetch starts
 
     console.log(`Fetching items for branchId: ${branchId}`);
 
@@ -53,8 +58,11 @@ const ItemList: React.FC = () => {
         setItems(filteredItems);
         console.log("Fetched Items:", filteredItems);
       })
-      .catch((error) => console.error("Error fetching items:", error));
-  }, [branchId]); // Added branchId to dependency array
+      .catch((error) => console.error("Error fetching items:", error))
+      .finally(() => {
+        setLoading(false); // Set loading to false when fetch completes
+      });
+  }, [branchId]);
 
   const deleteItem = (id: string) => {
     if (window.confirm(`האם אתה בטוח?`)) {
@@ -67,6 +75,25 @@ const ItemList: React.FC = () => {
         .catch((error) => console.error("Error deleting item:", error));
     }
   };
+
+  if (loading) {
+    // Display loading indicator while fetching data
+    return (
+      <Container
+        maxWidth="lg"
+        sx={{
+          mt: 4,
+          mb: 4,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "60vh", // Adjust height as needed
+        }}
+      >
+        <CircularProgress size={60} color="inherit" />
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -94,7 +121,7 @@ const ItemList: React.FC = () => {
               fullWidth={isSmallScreen}
               sx={{
                 backgroundColor: "#63CBC1FF", // Dark background color
-                color: "#000000FF", // White text color
+                color: "#000000FF", // Black text color
                 "&:hover": {
                   backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
                 },
@@ -111,7 +138,7 @@ const ItemList: React.FC = () => {
               component={Link}
               sx={{
                 backgroundColor: "#63CBC1FF", // Dark background color
-                color: "#000000FF", // White text color
+                color: "#000000FF", // Black text color
                 "&:hover": {
                   backgroundColor: "#BFF9F3FF", // Slightly lighter dark on hover
                 },
@@ -191,7 +218,9 @@ const ItemList: React.FC = () => {
               items.map((item) => (
                 <TableRow key={item._id} hover>
                   <TableCell align="center">{item.name}</TableCell>
-                  <TableCell align="center">{item.description || "אין"}</TableCell>
+                  <TableCell align="center">
+                    {item.description || "אין"}
+                  </TableCell>
 
                   {/* Conditionally render the data cells based on screen size */}
                   {!isSmallScreen && (

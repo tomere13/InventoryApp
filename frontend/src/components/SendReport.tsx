@@ -18,7 +18,7 @@ import {
   TextField,
   Button,
   Card,
-  CircularProgress,
+  CircularProgress, // Import CircularProgress
   Snackbar,
   Alert,
 } from "@mui/material";
@@ -27,15 +27,15 @@ const SendReport: React.FC = () => {
   const { branchId } = useParams<{ branchId: string }>();
   const { role } = useContext(AuthContext); // Access user role from context
   const navigate = useNavigate();
-  
+
   // State to hold the raw input values as strings
   const [presentStockNumber, setPresentStockNumber] = useState<{ [key: string]: string }>({});
-  
+
   const [items, setItems] = useState<IItem[]>([]);
-  
+
   // State to hold the parsed numeric values
   const [stockData, setStockData] = useState<Record<string, number>>({});
-  
+
   const [inputErrors, setInputErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -48,7 +48,8 @@ const SendReport: React.FC = () => {
       return;
     }
 
-    setLoading(true);
+    setLoading(true); // Set loading to true when fetching starts
+
     axios
       .get<IItem[]>(`${process.env.REACT_APP_API_URL}/api/${branchId}/items`)
       .then((response) => {
@@ -68,7 +69,9 @@ const SendReport: React.FC = () => {
         console.error(err);
         setError("Failed to fetch items. Please try again later.");
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false); // Set loading to false when fetching completes
+      });
   }, [branchId]);
 
   const handleStockChange = (
@@ -81,15 +84,15 @@ const SendReport: React.FC = () => {
     // Update the raw input value
     setPresentStockNumber((prevStock) => ({
       ...prevStock,
-      [itemId]: value
+      [itemId]: value,
     }));
 
     // Validate the input and update stockData and inputErrors accordingly
-    if (value === '') {
+    if (value === "") {
       // Empty input
       setInputErrors((prevErrors) => ({
         ...prevErrors,
-        [itemId]: 'אנא הזן ערך',
+        [itemId]: "אנא הזן ערך",
       }));
       setStockData((prevStockData) => {
         const newStockData = { ...prevStockData };
@@ -100,7 +103,7 @@ const SendReport: React.FC = () => {
       // Invalid number
       setInputErrors((prevErrors) => ({
         ...prevErrors,
-        [itemId]: 'אנא הזן מספר חוקי',
+        [itemId]: "אנא הזן מספר חוקי",
       }));
     } else {
       // Valid number
@@ -109,7 +112,7 @@ const SendReport: React.FC = () => {
         // Input greater than current stock
         setInputErrors((prevErrors) => ({
           ...prevErrors,
-          [itemId]: 'הכמות המוזנת גדולה מהכמות הקיימת במלאי',
+          [itemId]: "הכמות המוזנת גדולה מהכמות הקיימת במלאי",
         }));
       } else {
         // Input is valid, remove any existing error
@@ -139,7 +142,7 @@ const SendReport: React.FC = () => {
     }));
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_API_URL}/api/${branchId}/sendreport`,
         { stockReport: reportData },
         { headers: { "Content-Type": "application/json" } }
@@ -176,7 +179,7 @@ const SendReport: React.FC = () => {
       // Optionally, navigate away
       // navigate("/");
     }
-  }, [role, navigate]);
+  }, [role]);
 
   // Validation function
   const isFormValid = () => {
@@ -184,18 +187,26 @@ const SendReport: React.FC = () => {
       Object.keys(inputErrors).length === 0 &&
       items.every((item) => {
         const value = presentStockNumber[item._id];
-        return value !== undefined && value !== '';
+        return value !== undefined && value !== "";
       })
     );
   };
 
   if (loading) {
+    // Display loading indicator while fetching data
     return (
       <Container
         maxWidth="md"
-        sx={{ display: "flex", justifyContent: "center", mt: 4 }}
+        sx={{
+          mt: 4,
+          mb: 4,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "60vh", // Adjust height as needed
+        }}
       >
-        <CircularProgress />
+        <CircularProgress size={60} color="inherit" />
       </Container>
     );
   }
@@ -240,7 +251,7 @@ const SendReport: React.FC = () => {
                 <TableCell>
                   <TextField
                     id={item._id}
-                    value={presentStockNumber[item._id] || ''}
+                    value={presentStockNumber[item._id] || ""}
                     type="number"
                     required
                     onChange={(e) => handleStockChange(e, item._id)}
@@ -248,7 +259,7 @@ const SendReport: React.FC = () => {
                     size="small"
                     fullWidth
                     error={!!inputErrors[item._id]}
-                    helperText={inputErrors[item._id] || ''}
+                    helperText={inputErrors[item._id] || ""}
                   />
                 </TableCell>
               </TableRow>
@@ -269,7 +280,7 @@ const SendReport: React.FC = () => {
           }}
           disabled={submitting || !isFormValid()}
         >
-          {submitting ? <CircularProgress size={24} /> : 'שלח דו"ח'}
+          {submitting ? <CircularProgress size={24} /> : "שלח דו\"ח"}
         </Button>
       </Card>
 
