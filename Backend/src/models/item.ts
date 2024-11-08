@@ -10,6 +10,8 @@ export interface IItem extends Document {
   price?: number;
   dateAdded?: Date;
   branch: mongoose.Types.ObjectId; // Reference to Branch
+  supplier: string;
+
 }
 
 const ItemSchema: Schema = new Schema(
@@ -20,6 +22,8 @@ const ItemSchema: Schema = new Schema(
     price: { type: Number, default: 0 },
     dateAdded: { type: Date, default: Date.now },
     branch: { type: mongoose.Types.ObjectId, ref: 'Branch', required: true },
+    supplier: { type: String, trim: true }, // New supplier field
+
   },
   { timestamps: true }
 );

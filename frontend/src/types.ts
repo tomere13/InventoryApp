@@ -15,16 +15,18 @@ export interface IBranch {
 
 export interface IItem {
   _id: string;
+  supplier: string;
   name: string;
   description?: string;
   quantity: number;
   price?: number;
   dateAdded?: string;
-  branch: string; // Branch ID
+  branch: string; // Branch ID,
 }
 
 export interface INewItem {
   _id?: string;
+  supplier: string;
   name: string;
   description?: string;
   quantity: number;

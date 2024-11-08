@@ -18,7 +18,7 @@ import {
 
 const AddItem: React.FC = () => {
   const navigate = useNavigate();
-  const { branchId } = useParams<{ branchId: string }>(); 
+  const { branchId } = useParams<{ branchId: string }>();
 
   // State to manage the new item
   const [item, setItem] = useState<INewItem>({
@@ -26,7 +26,8 @@ const AddItem: React.FC = () => {
     description: "",
     quantity: 0,
     price: 0,
-    branch: branchId || "", 
+    branch: branchId || "",
+    supplier: "", // Initialize supplier
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +35,7 @@ const AddItem: React.FC = () => {
 
   useEffect(() => {
     if (!branchId) {
-      setError("Branch ID is missing. Cannot add item.");
+      setError("מזהה של הסניף חסר. לא ניתן להוסיף מוצר.");
     } else {
       setItem((prevItem) => ({
         ...prevItem,
@@ -67,7 +68,13 @@ const AddItem: React.FC = () => {
     }
 
     if (item.quantity <= 0) {
-      setError("הכמות צריכה להיות יותר גדולה מ0");
+      setError("הכמות צריכה להיות יותר גדולה מ-0");
+      return;
+    }
+
+    // Add validation for supplier if required
+    if (!item.supplier.trim()) {
+      setError("אנא הכנס ספק תקין");
       return;
     }
 
@@ -85,17 +92,18 @@ const AddItem: React.FC = () => {
         item
       );
       console.log("Item added:", response.data);
-      navigate(`/branch/${item.branch}/items`); 
+      navigate(`/branch/${item.branch}/items`);
     } catch (err: any) {
       console.error("Error adding item:", err);
-      setError(err.response ? 
-        err.response.data.message : "Failed to add item. Please try again."
+      setError(
+        err.response
+          ? err.response.data.message
+          : "Failed to add item. Please try again."
       );
     } finally {
       setLoading(false);
     }
   };
-
 
   if (error && !loading) {
     return (
@@ -153,13 +161,13 @@ const AddItem: React.FC = () => {
           <TextField
             label="כמות"
             name="quantity"
-            value={item.quantity === 0 ? "" : item.quantity} // Display empty string if value is 0}
+            value={item.quantity === 0 ? "" : item.quantity} // Display empty string if value is 0
             onChange={handleChange}
             type="number"
             fullWidth
             required
             margin="normal"
-            inputProps={{ min: 1,style: { textAlign: "left" } }}
+            inputProps={{ min: 1, style: { textAlign: "left" } }}
           />
           <TextField
             label="מחיר"
@@ -169,7 +177,15 @@ const AddItem: React.FC = () => {
             type="number"
             fullWidth
             margin="normal"
-            inputProps={{ min: 0, step: 0.01,style: { textAlign: "left" } }}
+            inputProps={{ min: 0, step: 0.01, style: { textAlign: "left" } }}
+          />
+          <TextField
+            label="ספק"
+            name="supplier"
+            value={item.supplier}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
           />
           <Button
             type="submit"

@@ -3,7 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
-import itemRoutes from './routes/items';
+import itemRoutes from './routes/itemRoutes'; // Updated import
 import authRoutes from './routes/auth';
 import branchRoutes from './routes/branchRoutes';
 import sendReport from './routes/sendReport';

@@ -10,7 +10,7 @@ export interface IItem {
   price?: number;
   dateAdded: Date;
   branch: string;
-  // Removed minimumStock
+  supplier: string;
 }
 
 export interface IStockReport {

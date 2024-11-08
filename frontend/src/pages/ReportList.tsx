@@ -1,8 +1,8 @@
 // src/pages/ReportList.tsx
 
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from '../utils/axiosInstance';
-import { IReport } from '../types';
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "../utils/axiosInstance";
+import { IReport } from "../types";
 import {
   Container,
   Typography,
@@ -22,9 +22,9 @@ import {
   Grid,
   Button,
   Pagination, // Import Pagination component
-} from '@mui/material';
-import { Visibility } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+} from "@mui/material";
+import { Visibility } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const ReportList: React.FC = () => {
   const [reports, setReports] = useState<IReport[]>([]);
@@ -32,10 +32,10 @@ const ReportList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // States for search and filters
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedBranch, setSelectedBranch] = useState<string>(''); // For branch filter
-  const [startDate, setStartDate] = useState<string>(''); // Using string to simplify
-  const [endDate, setEndDate] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedBranch, setSelectedBranch] = useState<string>(""); // For branch filter
+  const [startDate, setStartDate] = useState<string>(""); // Using string to simplify
+  const [endDate, setEndDate] = useState<string>("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -48,14 +48,14 @@ const ReportList: React.FC = () => {
           axios.get(`${process.env.REACT_APP_API_URL}/api/reports`),
           axios.get(`${process.env.REACT_APP_API_URL}/api/branches`),
         ]);
-        console.log('Reports API Response:', reportsResponse.data);
-        console.log('Branches API Response:', branchesResponse.data);
-        
+        console.log("Reports API Response:", reportsResponse.data);
+        console.log("Branches API Response:", branchesResponse.data);
+
         setReports(reportsResponse.data.reports || []);
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Failed to load data.');
+        console.error("Error fetching data:", err);
+        setError("Failed to load data.");
         setLoading(false);
       }
     };
@@ -78,12 +78,18 @@ const ReportList: React.FC = () => {
 
       // Filter by search query (searching in branch name and notes)
       const searchMatch =
-        (report.branchId && report.branchId.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (report.notes && report.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+        (report.branchId &&
+          report.branchId.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) ||
+        (report.notes &&
+          report.notes.toLowerCase().includes(searchQuery.toLowerCase()));
 
       // Filter by date range
       const reportDate = new Date(report.dateSent);
-      const startDateMatch = startDate ? reportDate >= new Date(startDate) : true;
+      const startDateMatch = startDate
+        ? reportDate >= new Date(startDate)
+        : true;
       const endDateMatch = endDate ? reportDate <= new Date(endDate) : true;
 
       return branchMatch && searchMatch && startDateMatch && endDateMatch;
@@ -101,16 +107,19 @@ const ReportList: React.FC = () => {
   }, [filteredReports, currentPage]);
 
   // Handle page change
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
     setCurrentPage(value);
   };
 
   // Reset filters and pagination
   const resetFilters = () => {
-    setSearchQuery('');
-    setSelectedBranch('');
-    setStartDate('');
-    setEndDate('');
+    setSearchQuery("");
+    setSelectedBranch("");
+    setStartDate("");
+    setEndDate("");
     setCurrentPage(1);
   };
 
@@ -179,7 +188,7 @@ const ReportList: React.FC = () => {
       </Box>
 
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           <CircularProgress />
         </Box>
       ) : error ? (
@@ -192,22 +201,30 @@ const ReportList: React.FC = () => {
             <Table aria-label="reports table">
               <TableHead>
                 <TableRow>
-                  <TableCell><strong>סניף</strong></TableCell>
-                  <TableCell><strong>תאריך נשלח</strong></TableCell>
-                  <TableCell align="center"><strong>פירוט</strong></TableCell>
+                  <TableCell>
+                    <strong>סניף</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>תאריך נשלח</strong>
+                  </TableCell>
+                  <TableCell align="center">
+                    <strong>פירוט</strong>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {currentReports.map((report) => (
                   <TableRow key={report._id} hover>
-                    <TableCell>{report.branchId ? report.branchId.name : 'N/A'}</TableCell>
                     <TableCell>
-                      {new Date(report.dateSent).toLocaleDateString('he-IL', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
+                      {report.branchId ? report.branchId.name : "N/A"}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(report.dateSent).toLocaleDateString("he-IL", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
                       })}
                     </TableCell>
                     <TableCell align="center">
@@ -229,7 +246,7 @@ const ReportList: React.FC = () => {
 
           {/* Pagination Component */}
           {totalPages > 1 && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <Pagination
                 count={totalPages}
                 page={currentPage}

@@ -37,7 +37,7 @@ export const getItemById = async (req: Request, res: Response): Promise<void> =>
 // Add a new item to a branch
 export const addItem = async (req: Request, res: Response): Promise<void> => {
   const { branchId } = req.params;
-  const { name, description, quantity, price } = req.body;
+  const { name, description, quantity, price, supplier } = req.body; // Add supplier
 
   if (!name || quantity == null) {
     res.status(400).json({ message: 'Name and quantity are required.' });
@@ -58,6 +58,7 @@ export const addItem = async (req: Request, res: Response): Promise<void> => {
       quantity,
       price,
       branch: branchId,
+      supplier: supplier?.trim() || '', // Handle supplier field
     });
     await newItem.save();
 
@@ -71,19 +72,23 @@ export const addItem = async (req: Request, res: Response): Promise<void> => {
 // Edit an existing item
 export const editItem = async (req: Request, res: Response): Promise<void> => {
   const { branchId, itemId } = req.params;
-  const { name, description, quantity, price } = req.body;
-
+  const { name, description, quantity, price, supplier } = req.body; // Add supplier
+  
   try {
     const item = await Item.findOne({ _id: itemId, branch: branchId });
     if (!item) {
       res.status(404).json({ message: 'Item not found.' });
+      console.log('sadsa');
+      
       return;
     }
-
+    console.log(item);
+    
     if (name) item.name = name.trim();
-    if (description) item.description = description.trim();
     if (quantity != null) item.quantity = quantity;
     if (price != null) item.price = price;
+    if (description !== undefined) item.description = description.trim();
+    if (supplier !== undefined) item.supplier = supplier.trim();
 
     await item.save();
 

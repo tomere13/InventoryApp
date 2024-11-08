@@ -19,7 +19,7 @@ router.get('/:itemId', getItemById);
 router.post('/', authorize('admin'), addItem);
 
 // Edit an item (admin only)
-router.put('/:itemId', authorize('admin'), editItem);
+router.patch('/:itemId', authorize('admin'), editItem);
 
 // Delete an item (admin only)
 router.delete('/:itemId', authorize('admin'), deleteItem);

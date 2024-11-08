@@ -1,11 +1,8 @@
-// src/pages/ItemList.tsx
-
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import axios from "../utils/axiosInstance";
 import { IItem } from "../types";
-import { Link } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Edit, Delete } from "@mui/icons-material";
-import { useParams } from "react-router-dom";
 
 // Import MUI components
 import {
@@ -23,7 +20,14 @@ import {
   Grid,
   useMediaQuery,
   useTheme,
-  CircularProgress, // Import CircularProgress
+  CircularProgress,
+  Pagination,
+  Box,
+  TextField,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
 } from "@mui/material";
 
 // Import AuthContext
@@ -38,6 +42,19 @@ const ItemList: React.FC = () => {
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  // Use search parameters for filters
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Read filters from query parameters
+  const searchQuery = searchParams.get("search") || "";
+  const startDate = searchParams.get("startDate") || "";
+  const endDate = searchParams.get("endDate") || "";
+  const selectedSupplier = searchParams.get("supplier") || "";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+
+  // Unique suppliers for the supplier filter
+  const [suppliers, setSuppliers] = useState<string[]>([]);
 
   useEffect(() => {
     if (!branchId) {
@@ -57,12 +74,76 @@ const ItemList: React.FC = () => {
         );
         setItems(filteredItems);
         console.log("Fetched Items:", filteredItems);
+
+        // Extract unique suppliers from items
+        const uniqueSuppliers = Array.from(
+          new Set(filteredItems.map((item) => item.supplier).filter(Boolean))
+        );
+        setSuppliers(uniqueSuppliers);
       })
       .catch((error) => console.error("Error fetching items:", error))
       .finally(() => {
         setLoading(false); // Set loading to false when fetch completes
       });
   }, [branchId]);
+
+  // Filtered items based on search and filter criteria
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      // Filter by search query (searching in name and description)
+      const searchMatch =
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.description &&
+          item.description.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      // Filter by date range
+      const itemDate = item.dateAdded ? new Date(item.dateAdded) : null;
+      const startDateMatch = startDate
+        ? itemDate && itemDate >= new Date(startDate)
+        : true;
+      const endDateMatch = endDate
+        ? itemDate && itemDate <= new Date(endDate)
+        : true;
+
+      // Filter by selected supplier
+      const supplierMatch = selectedSupplier
+        ? item.supplier === selectedSupplier
+        : true;
+
+      return searchMatch && startDateMatch && endDateMatch && supplierMatch;
+    });
+  }, [items, searchQuery, startDate, endDate, selectedSupplier]);
+
+  // Calculate total pages
+  const itemsPerPage = 13;
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+  // Get current page items
+  const currentItems = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredItems.slice(startIndex, endIndex);
+  }, [filteredItems, currentPage]);
+
+  // Handle filter changes by updating query parameters
+  const handleFilterChange = (key: string, value: string) => {
+    const updatedParams = new URLSearchParams(searchParams);
+    if (value) {
+      updatedParams.set(key, value);
+    } else {
+      updatedParams.delete(key);
+    }
+    // Reset to page 1 when filters change
+    if (key !== "page") {
+      updatedParams.set("page", "1");
+    }
+    setSearchParams(updatedParams);
+  };
+
+  // Reset filters
+  const resetFilters = () => {
+    setSearchParams({});
+  };
 
   const deleteItem = (id: string) => {
     if (window.confirm(`האם אתה בטוח?`)) {
@@ -104,6 +185,88 @@ const ItemList: React.FC = () => {
       >
         מוצרי מלאי
       </Typography>
+
+      {/* Filter Section */}
+      <Box sx={{ mb: 3 }}>
+        <Grid container spacing={2} alignItems="center">
+          {/* Search Input */}
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              label="חיפוש"
+              variant="outlined"
+              fullWidth
+              value={searchQuery}
+              onChange={(e) => handleFilterChange("search", e.target.value)}
+              placeholder="חפש לפי שם או תיאור"
+            />
+          </Grid>
+
+          {/* Start Date Input */}
+          <Grid item xs={12} sm={6} md={2}>
+            <TextField
+              label="מתאריך"
+              type="date"
+              variant="outlined"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={startDate}
+              onChange={(e) => handleFilterChange("startDate", e.target.value)}
+            />
+          </Grid>
+
+          {/* End Date Input */}
+          <Grid item xs={12} sm={6} md={2}>
+            <TextField
+              label="עד תאריך"
+              type="date"
+              variant="outlined"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={endDate}
+              onChange={(e) => handleFilterChange("endDate", e.target.value)}
+            />
+          </Grid>
+
+          {/* Supplier Filter */}
+          <Grid item xs={12} sm={6} md={2}>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel id="supplier-select-label">ספק</InputLabel>
+              <Select
+                labelId="supplier-select-label"
+                id="supplier-select"
+                value={selectedSupplier}
+                onChange={(e) => handleFilterChange("supplier", e.target.value)}
+                label="ספק"
+              >
+                <MenuItem value="">
+                  <em>הכל</em>
+                </MenuItem>
+                {suppliers.map((supplier) => (
+                  <MenuItem key={supplier} value={supplier}>
+                    {supplier}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {/* Reset Filters Button */}
+          <Grid item xs={12} sm={6} md={2}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              onClick={resetFilters}
+            >
+              איפוס מסננים
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
 
       {/* Buttons Section */}
       <Grid
@@ -185,6 +348,9 @@ const ItemList: React.FC = () => {
                   <TableCell align="center">
                     <strong>תאריך הוספה</strong>
                   </TableCell>
+                  <TableCell align="center">
+                    <strong>ספק</strong>
+                  </TableCell>
                 </>
               )}
 
@@ -196,18 +362,18 @@ const ItemList: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.length === 0 ? (
+            {currentItems.length === 0 ? (
               <TableRow>
                 {/* Adjust colSpan based on the number of visible columns */}
                 <TableCell
                   colSpan={
                     role === "admin"
                       ? isSmallScreen
-                        ? 3 // Name, Description, Actions
-                        : 6 // All columns including admin actions
+                        ? 4 // Name, Description, Supplier, Actions
+                        : 7 // All columns including admin actions
                       : isSmallScreen
-                      ? 2 // Name, Description
-                      : 5 // All columns excluding admin actions
+                      ? 3 // Name, Description, Supplier
+                      : 6 // All columns excluding admin actions
                   }
                   align="center"
                 >
@@ -215,7 +381,7 @@ const ItemList: React.FC = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              items.map((item) => (
+              currentItems.map((item) => (
                 <TableRow key={item._id} hover>
                   <TableCell align="center">{item.name}</TableCell>
                   <TableCell align="center">
@@ -226,13 +392,25 @@ const ItemList: React.FC = () => {
                   {!isSmallScreen && (
                     <>
                       <TableCell align="center">
-                        {item.price ? item.price.toFixed(2) : "N/A"}
+                        {item.price !== undefined && item.price !== null
+                          ? item.price.toFixed(2)
+                          : "N/A"}
                       </TableCell>
                       <TableCell align="center">{item.quantity}</TableCell>
                       <TableCell align="center">
                         {item.dateAdded
-                          ? new Date(item.dateAdded).toLocaleDateString()
+                          ? new Date(item.dateAdded).toLocaleDateString(
+                              "he-IL",
+                              {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              }
+                            )
                           : "N/A"}
+                      </TableCell>
+                      <TableCell align="center">
+                        {item.supplier ? item.supplier : "אין ספק"}
                       </TableCell>
                     </>
                   )}
@@ -244,7 +422,9 @@ const ItemList: React.FC = () => {
                         {/* Edit Button */}
                         <IconButton
                           component={Link}
-                          to={`/branch/${branchId}/edit/${item._id}`}
+                          to={`/branch/${branchId}/edit/${
+                            item._id
+                          }?${searchParams.toString()}`}
                           sx={{
                             backgroundColor: "#FFC107", // Amber color
                             color: "#ffffff",
@@ -292,6 +472,22 @@ const ItemList: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Pagination Component */}
+      {totalPages > 1 && (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(e, value) =>
+              handleFilterChange("page", value.toString())
+            }
+            color="primary"
+            variant="outlined"
+            shape="rounded"
+          />
+        </Box>
+      )}
     </Container>
   );
 };
