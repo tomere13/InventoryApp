@@ -1,8 +1,6 @@
-// src/pages/ReportList.tsx
-
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "../utils/axiosInstance";
-import { IReport } from "../types";
+import { IReport, IBranch } from "../types";
 import {
   Container,
   Typography,
@@ -21,20 +19,25 @@ import {
   TextField,
   Grid,
   Button,
-  Pagination, // Import Pagination component
+  Pagination,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Visibility } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
 const ReportList: React.FC = () => {
   const [reports, setReports] = useState<IReport[]>([]);
+  const [branches, setBranches] = useState<IBranch[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   // States for search and filters
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedBranch, setSelectedBranch] = useState<string>(""); // For branch filter
-  const [startDate, setStartDate] = useState<string>(""); // Using string to simplify
+  const [selectedBranch, setSelectedBranch] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
   // Pagination state
@@ -52,6 +55,7 @@ const ReportList: React.FC = () => {
         console.log("Branches API Response:", branchesResponse.data);
 
         setReports(reportsResponse.data.reports || []);
+        setBranches(branchesResponse.data || []); // Adjusted here
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -71,9 +75,9 @@ const ReportList: React.FC = () => {
   // Filtered reports based on search and filter criteria
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
-      // Filter by selected branch
+      // Filter by selected branch using branch _id
       const branchMatch = selectedBranch
-        ? report.branchId && report.branchId.name === selectedBranch
+        ? report.branchId && report.branchId._id === selectedBranch
         : true;
 
       // Filter by search query (searching in branch name and notes)
@@ -123,6 +127,73 @@ const ReportList: React.FC = () => {
     setCurrentPage(1);
   };
 
+  // Function to handle CSV export
+  const handleExportCSV = () => {
+    // Prepare CSV data
+    const csvRows = [];
+
+    // Define headers
+    const headers = ["שם הסניף", "תאריך דוח", "מוצרים שהוזמנו"];
+    csvRows.push(headers.join(","));
+
+    // Loop over filtered reports
+    filteredReports.forEach((report) => {
+      const branchName = report.branchId ? report.branchId.name : "N/A";
+      const dateSent = new Date(report.dateSent).toLocaleString("he-IL", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      // Aggregate products into a single string
+      let products = "";
+      if (report.stockReport && report.stockReport.length > 0) {
+        products = report.stockReport
+          .map((it) => {
+            const itemName = it.itemId ? it.itemId.name : "N/A";
+            const currentStock = it.currentStock;
+
+            return (
+              `שם המוצר: ${itemName}\n` + `${currentStock} :כמות להזמנה\n\n`
+            );
+          })
+          .join(" "); // Separator between products
+      } else {
+        products = "No products";
+      }
+
+      const row = [branchName, dateSent, products];
+
+      // Escape any commas or double quotes in data
+      const escapedRow = row.map(
+        (value) =>
+          `"${(value + "").replace(/"/g, '""').replace(/\n/g, "\r\n")}"`
+      );
+      csvRows.push(escapedRow.join(","));
+    });
+
+    // Create CSV string
+    const csvString = csvRows.join("\n");
+
+    // Create a blob
+    const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+
+    // Create a link to download it
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      // Browsers that support HTML5 download attribute
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "reports.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" align="center" gutterBottom>
@@ -132,7 +203,7 @@ const ReportList: React.FC = () => {
       <Box sx={{ mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
           {/* Search Input */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <TextField
               label="חיפוש"
               variant="outlined"
@@ -173,8 +244,31 @@ const ReportList: React.FC = () => {
             />
           </Grid>
 
-          {/* Reset Filters Button */}
+          {/* Branch Filter */}
           <Grid item xs={12} sm={6} md={2}>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel id="branch-select-label">סניף</InputLabel>
+              <Select
+                labelId="branch-select-label"
+                id="branch-select"
+                value={selectedBranch}
+                onChange={(e) => setSelectedBranch(e.target.value)}
+                label="סניף"
+              >
+                <MenuItem value="">
+                  <em>כל הסניפים</em>
+                </MenuItem>
+                {branches.map((branch) => (
+                  <MenuItem key={branch._id} value={branch._id}>
+                    {branch.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {/* Reset Filters Button */}
+          <Grid item xs={12} sm={6} md={1.5}>
             <Button
               variant="outlined"
               color="secondary"
@@ -182,6 +276,18 @@ const ReportList: React.FC = () => {
               onClick={resetFilters}
             >
               איפוס מסננים
+            </Button>
+          </Grid>
+
+          {/* Export CSV Button */}
+          <Grid item xs={12} sm={6} md={1.5}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleExportCSV}
+            >
+              ייצוא ל-CSV
             </Button>
           </Grid>
         </Grid>
